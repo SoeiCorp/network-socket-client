@@ -6,17 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "drizzle-kit generate:pg",
+    "push": "drizzle-kit push:pg",
+    "studio": "drizzle-kit studio",
+    "migrate": "ts-node --skip-project drizzle/migrate.ts",
+    "seed": "ts-node --skip-project drizzle/seed.ts"
   },
   "dependencies": {
+    "@vercel/postgres": "^0.8.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.8",
     "next": "14.2.1",
+    "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/node": "20.12.7",
     "@types/react": "18.2.79",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.20.14",
     "eslint": "^8",
     "eslint-config-next": "14.2.1",
     "postcss": "^8",
