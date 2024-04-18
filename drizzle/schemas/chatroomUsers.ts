@@ -6,6 +6,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from './users';
 import { chatrooms } from './chatrooms';
+import { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 export const chatroomUsers = pgTable(
     'chatroom_users',
@@ -19,3 +20,6 @@ export const chatroomUsers = pgTable(
         }
     }
 );
+
+export type ChatroomUser = InferSelectModel<typeof chatroomUsers>
+export type NewChatroomUser = InferInsertModel<typeof chatroomUsers>

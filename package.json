@@ -10,7 +10,8 @@
     "generate": "drizzle-kit generate:pg",
     "push": "drizzle-kit push:pg",
     "studio": "drizzle-kit studio",
-    "migrate": "ts-node --skip-project drizzle/migrate.ts"
+    "migrate": "ts-node --skip-project drizzle/migrate.ts",
+    "seed": "ts-node --skip-project drizzle/seed.ts"
   },
   "dependencies": {
     "@vercel/postgres": "^0.8.0",
@@ -23,6 +24,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/node": "20.12.7",
     "@types/react": "18.2.79",
     "@types/react-dom": "^18",

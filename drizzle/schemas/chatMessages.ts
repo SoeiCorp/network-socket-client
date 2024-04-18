@@ -8,6 +8,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { chatrooms } from './chatrooms';
 import { users } from './users';
+import { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 export const messageTypeEnum = pgEnum('message_type', ['text', 'image']);
 
@@ -22,3 +23,6 @@ export const chatMessages = pgTable(
         createdAt: timestamp('created_at').defaultNow().notNull()
     }
 );
+
+export type ChatMessage = InferSelectModel<typeof chatMessages>
+export type NewChatMessage = InferInsertModel<typeof chatMessages>
