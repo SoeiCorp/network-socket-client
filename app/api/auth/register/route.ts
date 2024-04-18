@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/drizzle/db';
-import { users, NewUser } from '@/drizzle/schemas/users';
+import { users, NewUser, User } from '@/drizzle/schemas/users';
+import { createToken } from '@/lib/auth';
+
 export async function POST(req: NextRequest) {
     const bcrypt = require('bcrypt')
     try {
@@ -8,12 +10,15 @@ export async function POST(req: NextRequest) {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(reqBody.password, salt);
         reqBody.password = hashedPassword
-        const user = await db.insert(users).values(reqBody).returning({ userId: users.id });
+        const user: User[] = await db.insert(users).values(reqBody).returning();
+        const { token, cookieExpires } = await createToken(user[0])
+
         return NextResponse.json({
             success: true,
-            message: 'Successfully registered',
-            userId: user[0].userId
-        }, { status: 201 })
+            message: 'Successfully Registered',
+            id: user[0].id,
+            name: user[0].name
+        }, { status: 200, headers: { "Set-Cookie": `token=${token}; httpOnly=true; expires=${cookieExpires} ` } })
     } catch (err) {
         console.log(err)
         return NextResponse.json({
