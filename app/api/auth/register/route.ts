@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/drizzle/db';
-import { users } from '@/drizzle/schemas/users';
-export async function POST(req: Request) {
+import { users, NewUser } from '@/drizzle/schemas/users';
+export async function POST(req: NextRequest) {
     const bcrypt = require('bcrypt')
     try {
-        const reqBody = await req.json();
+        const reqBody: NewUser = await req.json();
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(reqBody.password, salt);
         reqBody.password = hashedPassword
@@ -20,6 +20,6 @@ export async function POST(req: Request) {
             success: false,
             message: 'There is an error occurred',
             error: err
-        }, { status: 404 })
+        }, { status: 400 })
     }
 }
