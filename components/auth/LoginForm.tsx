@@ -59,6 +59,13 @@ export default function LoginForm() {
       setErrors(validationErrors);
     } else {
       // TODO: Backend for login the user
+      await fetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password
+        })
+      })
     }
   };
 
