@@ -1,14 +1,18 @@
+import React from "react";
 import ChatMessage from "./ChatMessage";
 import { MessagesGroupByDate } from "./ChatMessageList";
+import Avatar from "../ChatList/Avatar";
 
 type Props = {
   messageByDate: MessagesGroupByDate;
   senderId: number;
+  isGroupChat: boolean;
 };
 
 export default function ChatMessageListByDate({
   messageByDate,
   senderId,
+  isGroupChat,
 }: Props) {
   const { Date, Messages } = messageByDate;
   const formattedDate = (Date: string) => {
@@ -51,8 +55,54 @@ export default function ChatMessageListByDate({
       <div className="flex flex-col-reverse">
         {Messages.slice()
           .reverse()
-          .map((message, index) => (
-            <ChatMessage key={index} message={message} senderId={senderId} />
+          .map((message, index, array) => (
+            <React.Fragment key={index}>
+              {message.userId !== senderId &&
+              (index === array.length - 1 ||
+                message.userId !== array[index + 1].userId) ? (
+                <div className="flex item gap-3 mt-3">
+                  <Avatar
+                    name={message.userName}
+                    userId={message.userId}
+                    className="h-[36px] w-[36px] text-sm"
+                  />
+                  <div>
+                    {isGroupChat && (
+                      <p className="text-slate-700 text-sm font-medium">
+                        {message.userName}
+                      </p>
+                    )}
+                    <ChatMessage
+                      key={index}
+                      message={message}
+                      senderId={senderId}
+                      isGroupChat={isGroupChat}
+                    />
+                  </div>
+                </div>
+              ) : message.userId !== senderId ? (
+                <div className="flex item gap-3">
+                  <Avatar
+                    name={message.userName}
+                    userId={message.userId}
+                    className="h-[36px] w-[36px] text-sm invisible"
+                  />
+                  <ChatMessage
+                    key={index}
+                    message={message}
+                    senderId={senderId}
+                    isGroupChat={isGroupChat}
+                  />
+                </div>
+              ) : (
+                <ChatMessage
+                  key={index}
+                  message={message}
+                  senderId={senderId}
+                  isGroupChat={isGroupChat}
+                />
+              )}
+            </React.Fragment>
           ))}
       </div>
     </div>

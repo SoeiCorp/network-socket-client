@@ -1,17 +1,27 @@
 "use client";
 import ChatMessageListByDate from "./ChatMessageListByDate";
-import { ChatMessage } from "@/drizzle/schemas/chatMessages";
 import { useRef, useEffect, useState } from "react";
 
 type Props = {
   chatroomId: number;
   senderId: number;
+  isGroupChat: boolean;
+};
+
+export type ChatMessageWithName = {
+  id: number;
+  type: "text" | "image";
+  createdAt: Date;
+  chatroomId: number;
+  userId: number;
+  userName: string;
+  content: string;
 };
 
 // ChatMessage need to have "name" of the sender too
 export interface MessagesGroupByDate {
   Date: string;
-  Messages: ChatMessage[];
+  Messages: ChatMessageWithName[];
 }
 
 // TEMPORARY
@@ -25,6 +35,7 @@ const messages: MessagesGroupByDate[] = [
         createdAt: new Date("2024-04-19T08:00:00Z"),
         chatroomId: 1,
         userId: 1,
+        userName: "Sek Loso",
         content: "Hello there!",
       },
       {
@@ -33,8 +44,27 @@ const messages: MessagesGroupByDate[] = [
         createdAt: new Date("2024-04-19T08:05:00Z"),
         chatroomId: 1,
         userId: 2,
+        userName: "Sek Lomo",
         content:
           "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?q=10&h=200",
+      },
+      {
+        id: 9,
+        type: "text",
+        createdAt: new Date("2024-04-19T08:05:00Z"),
+        chatroomId: 1,
+        userId: 2,
+        userName: "Sek Lomo",
+        content: "another message",
+      },
+      {
+        id: 10,
+        type: "text",
+        createdAt: new Date("2024-04-19T08:05:00Z"),
+        chatroomId: 1,
+        userId: 2,
+        userName: "Sek Lomo",
+        content: "another message",
       },
       {
         id: 3,
@@ -42,6 +72,7 @@ const messages: MessagesGroupByDate[] = [
         createdAt: new Date("2024-04-19T08:10:00Z"),
         chatroomId: 1,
         userId: 1,
+        userName: "Sek Loso",
         content: "How are you?",
       },
     ],
@@ -55,6 +86,7 @@ const messages: MessagesGroupByDate[] = [
         createdAt: new Date("2024-04-18T10:00:00Z"),
         chatroomId: 2,
         userId: 3,
+        userName: "Sek Moho",
         content: "Good morning!",
       },
       {
@@ -63,13 +95,27 @@ const messages: MessagesGroupByDate[] = [
         createdAt: new Date("2024-04-18T10:05:00Z"),
         chatroomId: 2,
         userId: 4,
+        userName: "Sek YedDou",
         content: "Morning! How's it going?",
+      },
+      {
+        id: 5,
+        type: "text",
+        createdAt: new Date("2024-04-18T10:05:00Z"),
+        chatroomId: 2,
+        userId: 5,
+        userName: "Nong Dear",
+        content: "Yooo",
       },
     ],
   },
 ];
 
-export default function ChatMessageList({ chatroomId, senderId }: Props) {
+export default function ChatMessageList({
+  chatroomId,
+  senderId,
+  isGroupChat,
+}: Props) {
   const [messagesByDate, setMessagesByDate] =
     useState<MessagesGroupByDate[]>(messages);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -121,6 +167,7 @@ export default function ChatMessageList({ chatroomId, senderId }: Props) {
                   key={index}
                   messageByDate={messageByDate}
                   senderId={senderId}
+                  isGroupChat={isGroupChat}
                 />
               ))}
           </div>
