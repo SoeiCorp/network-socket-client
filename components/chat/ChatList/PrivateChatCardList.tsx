@@ -98,7 +98,7 @@ export default function PrivateChatCardList({ userId }: Props) {
   // }
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       {/* TODO : UI to display onlineChatroom and offlineChatroom */}
       {loading ? (
         Array.from({ length: 12 }).map((_, index) => (
@@ -113,6 +113,6 @@ export default function PrivateChatCardList({ userId }: Props) {
           <SearchNotFound text="ไม่พบห้องแชท" />
         </div>
       )}
-    </>
+    </div>
   );
 }

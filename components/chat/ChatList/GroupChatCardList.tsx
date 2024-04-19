@@ -100,7 +100,7 @@ export default function GroupChatCardList({ userId }: Props) {
   // TODO : Logic to get joinedChatrooms and notJoinedChatrooms
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       {/* TODO : UI to display joinedChatrooms and notJoinedChatrooms */}
       {loading ? (
         Array.from({ length: 12 }).map((_, index) => (
@@ -115,6 +115,6 @@ export default function GroupChatCardList({ userId }: Props) {
           <SearchNotFound text="ไม่พบห้องแชท" />
         </div>
       )}
-    </>
+    </div>
   );
 }

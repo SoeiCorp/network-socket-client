@@ -79,7 +79,7 @@ export default function NavigationLayout({
             <PrivateChatCardList userId={userId} />
           </div>
         ) : (
-          <div className="overflow-y-auto mt-[10px] h-[67%]">
+          <div className="overflow-y-auto mt-[10px] h-[70%]">
             <GroupChatCardList userId={userId} />
           </div>
         )}

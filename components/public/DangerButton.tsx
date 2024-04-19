@@ -24,7 +24,7 @@ export default function DangerButton(props: Props) {
   return (
     <button
       type={type || "button"}
-      className={`px-[20px] py-[12px] rounded-[6px] text-sm text-slate-50 bg-red-600 hover:opacity-80 active:opacity-60 disabled:opacity-60 ${className}`}
+      className={`px-[20px] py-[10px] rounded-[6px] text-sm font-medium text-slate-500 border border-1 border-slate-400 hover:bg-red-500 hover:text-white hover:border-0 active:opacity-60 disabled:opacity-60 ${className}`}
       disabled={isDisabled}
       onClick={onClick}
     >

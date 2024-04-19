@@ -29,9 +29,8 @@ export default function ChatCard({ chatroom }: Props) {
 
   return (
     <Link
-      className={`${
-        isChatRoom ? "bg-neutral-200" : "hover:bg-neutral-100"
-      } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer`}
+      className={`${isChatRoom ? "bg-slate-200" : "hover:bg-slate-100"
+        } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3`}
       href={`/chat/${String(chatroom.id)}`}
     >
       <Avatar name={chatroom.name || ""} chatroomId={chatroom.id} />
