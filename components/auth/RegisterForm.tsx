@@ -78,6 +78,14 @@ export default function RegisterForm() {
       setErrors(validationErrors);
     } else {
       // TODO: Backend for register the user
+      await fetch('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: form.email,
+          name: form.name,
+          password: form.password
+        })
+      })
     }
   };
 
