@@ -5,7 +5,9 @@ type Name = {
     name: string
 }
 export default function Profile(props: Name) {
+    const { name } = props;
     const [showEditProfile, setShowEditProfile] = useState(false)
+    console.log(name.toUpperCase());
 
     const toggleEditProfile = () => {
         setShowEditProfile(!showEditProfile)
@@ -24,7 +26,7 @@ export default function Profile(props: Name) {
                                 "w-[48px] h-[48px] rounded-full flex items-center justify-center bg-white border border-black"
                             }
                         >
-                            <div className="text-slate-800 text-lg">{props.name[0].toUpperCase()}</div>
+                            <div className="text-slate-800 text-lg">{props.name[0]}</div>
                         </div>
                     </div>
 

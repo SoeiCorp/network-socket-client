@@ -1,3 +1,4 @@
+import Image from "next/image";
 export default function Logo() {
   return (
     <div className="text-slate-500 font-bold gap-2 p-4 text-2xl flex items-center">

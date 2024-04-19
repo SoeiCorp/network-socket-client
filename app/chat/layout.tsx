@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import PrivateChatCardList from "@/components/chat/ChatList/PrivateChatCardList";
 import GroupChatCardList from "@/components/chat/ChatList/GroupChatCardList";
 import React from "react";
-import ChatLayout from "@/components/chat/ChatList/ChatLayout";
 import Logo from "@/components/auth/Logo";
 import Image from "next/image";
 import CreateNewGroupButton from "@/components/chat/ChatList/CreateNewGroupButton";
