@@ -29,7 +29,7 @@ const Avatar: React.FC<AvatarProps> = ({ name, chatroomId }) => {
           color
         }
       >
-        <div className="text-slate-800">{name[0]}</div>
+        <div className="text-slate-800 text-lg">{name[0].toUpperCase()}</div>
       </div>
     </div>
   );

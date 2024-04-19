@@ -32,6 +32,67 @@ export default function GroupChatCardList({ userId }: Props) {
         type: "group",
         createdAt: new Date(),
       },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Gropu2",
+        type: "group",
+        createdAt: new Date(),
+      },
+
     ];
     setChatrooms(chatroomsData);
   }, []);

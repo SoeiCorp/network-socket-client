@@ -33,6 +33,60 @@ export default function PrivateChatCardList({ userId }: Props) {
         type: "private",
         createdAt: new Date(),
       },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "Somying",
+        type: "private",
+        createdAt: new Date(),
+      },
     ];
     setChatrooms(chatroomsData);
   }, []);

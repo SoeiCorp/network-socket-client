@@ -1,5 +1,5 @@
 import React from "react";
-import ChatRoom from "@/components/chat/ChatRoom/ChatRoom";
+import ChatRoom from "@/components/chat/chatRoom/ChatRoom";
 
 export default async function ChatRoomPage({
   params,
