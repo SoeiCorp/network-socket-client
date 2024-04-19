@@ -27,8 +27,8 @@ export default function ConfirmPasswordInput({
       </label>
 
       <input
-        name="cPassword"
-        id="cPassword"
+        name="confirmPassword"
+        id="confirmPassword"
         type={showPassword ? "text" : "password"}
         placeholder="ยืนยันรหัสผ่าน"
         className="h-[40px] border rounded-md px-[12px] focus-within:ring-2 text-md outline-none w-full"

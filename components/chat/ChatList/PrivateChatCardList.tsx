@@ -8,7 +8,7 @@ import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import { User } from "@/drizzle/schemas/users";
 
 type Props = {
-  userId: string;
+  userId: number;
 };
 
 export default function PrivateChatCardList({ userId }: Props) {

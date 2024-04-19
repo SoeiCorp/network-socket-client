@@ -2,87 +2,93 @@
 import ChatMessageListByDate from "./ChatMessageListByDate";
 import { ChatMessage } from "@/drizzle/schemas/chatMessages";
 import { useRef, useEffect, useState } from "react";
-// import { MessagesGroupByDate, getMessageByChatRoom } from "@/actions/chat/getMessageByChatRoom"
-// import { setIncommingMessageHandler } from "../clientSocket/clientSocket"
-// import { constructIncommingMessageHandler } from "../clientSocket/utils"
-// import { useAppDispatch, useAppSelector } from "@/redux/store"
-// import { toggleChatListReload } from "@/redux/features/chatListSlice";
 
 type Props = {
-  chatroomId: string;
-  senderId: string;
+  chatroomId: number;
+  senderId: number;
 };
 
+// ChatMessage need to have "name" of the sender too
 export interface MessagesGroupByDate {
   Date: string;
   Messages: ChatMessage[];
 }
 
-let toDispatch: boolean = true;
+// TEMPORARY
+const messages: MessagesGroupByDate[] = [
+  {
+    Date: "Fri Apr 19 2024",
+    Messages: [
+      {
+        id: 1,
+        type: "text",
+        createdAt: new Date("2024-04-19T08:00:00Z"),
+        chatroomId: 1,
+        userId: 1,
+        content: "Hello there!",
+      },
+      {
+        id: 2,
+        type: "image",
+        createdAt: new Date("2024-04-19T08:05:00Z"),
+        chatroomId: 1,
+        userId: 2,
+        content:
+          "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?q=10&h=200",
+      },
+      {
+        id: 3,
+        type: "text",
+        createdAt: new Date("2024-04-19T08:10:00Z"),
+        chatroomId: 1,
+        userId: 1,
+        content: "How are you?",
+      },
+    ],
+  },
+  {
+    Date: "Sat Apr 20 2024",
+    Messages: [
+      {
+        id: 4,
+        type: "text",
+        createdAt: new Date("2024-04-18T10:00:00Z"),
+        chatroomId: 2,
+        userId: 3,
+        content: "Good morning!",
+      },
+      {
+        id: 5,
+        type: "text",
+        createdAt: new Date("2024-04-18T10:05:00Z"),
+        chatroomId: 2,
+        userId: 4,
+        content: "Morning! How's it going?",
+      },
+    ],
+  },
+];
 
 export default function ChatMessageList({ chatroomId, senderId }: Props) {
-  // console.log("Rendering chat message list");
-  // console.log("toDispatch = ", toDispatch);
-  const [messagesByDate, setMessagesByDate] = useState<MessagesGroupByDate[]>(
-    []
-  );
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [messagesByDate, setMessagesByDate] =
+    useState<MessagesGroupByDate[]>(messages);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const dispatch = useAppDispatch();
-  // if (toDispatch) {
-  //     // console.log("Dispatching from If");
-  //     dispatch(toggleChatListReload());
-  //     toDispatch = false;
-  // }
-  // const chatListReloadState = useAppSelector((state) => state.chatList.chatListReloadState);
-
-  // useEffect(() => {
-  //     const incommingMessageHandler = constructIncommingMessageHandler(setMessagesByDate/*, dispatch, toggleChatListReload*/);
-  //     setIncommingMessageHandler(incommingMessageHandler);
-  // }, []);
-
-  // useEffect(() => {
-  //     dispatch(toggleChatListReload());
-  //     toDispatch = true;
-  // }, [messagesByDate]);
+  // TODO : fetch chatmessage of chatroomId (need sender name too)
 
   const bottomOfPanelRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //     async function getInitialData() {
-  //         try {
-  //             setMessagesByDate(await getMessageByChatRoom(chatroomId));
-  //             setIsLoading(false)
-  //         } catch (err) {
-  //             console.log(err)
-  //             return;
-  //         }
-  //     }
-
-  //     getInitialData();
-  // }, [])
-
   useEffect(() => {
     const handleResize = () => {
       if (bottomOfPanelRef.current) {
         bottomOfPanelRef.current.scrollIntoView({ block: "end" });
       }
     };
-
-    // Add event listener for resize event
     window.addEventListener("resize", handleResize);
-
-    // Call the handleResize function on initial render
     handleResize();
-
-    // Cleanup: remove event listener
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [messagesByDate]);
-
-  // console.log("chat list reloading")
-  // console.log("chat list page function executing");
 
   return (
     <>

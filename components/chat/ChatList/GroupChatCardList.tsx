@@ -7,7 +7,7 @@ import SearchNotFound from "./SearchNotFound";
 import { Chatroom } from "@/drizzle/schemas/chatrooms";
 
 type Props = {
-  userId: string;
+  userId: number;
 };
 
 export default function GroupChatCardList({ userId }: Props) {

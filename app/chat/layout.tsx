@@ -20,7 +20,7 @@ export default function NavigationLayout({
   const [nameOfMe, setNameOfMe] = useState("");
 
   // TEMPORARY
-  const userId = "demoId";
+  const userId = 123;
 
   // Connect to websocket
   useEffect(() => {

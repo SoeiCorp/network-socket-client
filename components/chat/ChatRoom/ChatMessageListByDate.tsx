@@ -1,14 +1,9 @@
 import ChatMessage from "./ChatMessage";
-import { Message } from "postcss";
-
-export interface MessagesGroupByDate {
-  Date: string;
-  Messages: Message[];
-}
+import { MessagesGroupByDate } from "./ChatMessageList";
 
 type Props = {
   messageByDate: MessagesGroupByDate;
-  senderId: string;
+  senderId: number;
 };
 
 export default function ChatMessageListByDate({
@@ -16,7 +11,6 @@ export default function ChatMessageListByDate({
   senderId,
 }: Props) {
   const { Date, Messages } = messageByDate;
-
   const formattedDate = (Date: string) => {
     const [day, month, date, year] = Date.split(" ");
     const thaiDay: { [key: string]: string } = {
