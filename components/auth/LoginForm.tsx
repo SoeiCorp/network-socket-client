@@ -71,7 +71,7 @@ export default function LoginForm() {
         เข้าสู่ระบบ
       </p>
       <Input
-        name="อีเมล"
+        name="email"
         label="อีเมล"
         inputType="email"
         warning={errors.email}
