@@ -59,6 +59,13 @@ export default function LoginForm() {
       setErrors(validationErrors);
     } else {
       // TODO: Backend for login the user
+      await fetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password
+        })
+      })
     }
   };
 
@@ -71,7 +78,7 @@ export default function LoginForm() {
         เข้าสู่ระบบ
       </p>
       <Input
-        name="อีเมล"
+        name="email"
         label="อีเมล"
         inputType="email"
         warning={errors.email}
