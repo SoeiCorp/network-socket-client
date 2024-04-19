@@ -15,7 +15,7 @@ export default function NavigationLayout({
   const [isPrivateChat, setPrivateChat] = useState(false);
 
   // TEMPORARY
-  const userId = "demoId";
+  const userId = 123;
 
   // Connect to websocket
   useEffect(() => {

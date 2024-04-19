@@ -1,92 +1,108 @@
-"use client"
+"use client";
 
-import { Message } from "postcss"
-import Image from "next/image"
-import { useState } from "react"
-import close from "@/public/icons/close.svg"
+import { ChatMessage } from "@/drizzle/schemas/chatMessages";
+import Image from "next/image";
+import { useState } from "react";
+import close from "@/public/icons/close.svg";
 
 type Props = {
-    message: Message,
-    senderId: string
-}
+  message: ChatMessage;
+  senderId: number;
+};
 
 export default function ChatMessage({ message, senderId }: Props) {
-    const { id, userId, createdAt, content, isImage } = message
-    const isSender = senderId === userId
-    const hours = createdAt.getHours().toString().padStart(2, "0")
-    const minutes = createdAt.getMinutes().toString().padStart(2, "0");
-    const time = `${hours}:${minutes}`
+  const { id, userId, createdAt, content, type } = message;
+  const isSender = senderId === userId;
+  const hours = createdAt.getHours().toString().padStart(2, "0");
+  const minutes = createdAt.getMinutes().toString().padStart(2, "0");
+  const time = `${hours}:${minutes}`;
 
-    const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-    const toggleFullscreen = () => {
-        setIsFullscreen(!isFullscreen);
-    };
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
 
-    return (
-        <>
-            {isImage ? (
-                // Case: IMAGE  
-                <div className={`flex flex-col ${isSender ? "items-end" : ""}`}>
-                    <div className={`flex flex-row gap-2 items-end`}>
-                        <div className={`text-slate-500 text-[12px] -translate-y-[6px] lg:text-[12px] ${!isSender && "order-last"}`}>{time}</div>
-                        <div>
-                            {isFullscreen && (
-                                <button
-                                    onClick={toggleFullscreen}
-                                    className="fixed z-50 top-0 right-0 m-6 p-1 text-white rounded-full cursor-pointer hover:bg-slate-500 md:m-[24px]"
-                                >
-                                    <Image
-                                        className="w-auto h-auto"
-                                        src={close}
-                                        alt="closeImageButton"
-                                        width={32}
-                                        height={32}
-                                    />
-                                </button>
-                            )}
-                            <div
-                                className={`fixed z-40 inset-0 flex justify-center items-center bg-black bg-opacity-80 ${isFullscreen ? '' : 'hidden'}`}
-                            // onClick={toggleFullscreen}
-                            >
-                                <Image
-                                    src={content}
-                                    alt="chatImage"
-                                    fill
-                                    style={{
-                                        objectFit: 'contain',
-                                    }}
-                                    sizes="w-auto h-auto"
-                                    className="w-auto h-auto"
-                                />
-                            </div>
-                            <Image
-                                src={content}
-                                alt="chatImage"
-                                width={268}
-                                height={357}
-                                className={`mb-2 rounded-[16px] max-w-[64vw] shadow lg:max-w-[24vw] cursor-pointer`}
-                                onClick={toggleFullscreen}
-                                priority
-                            />
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                // Case: TEXT
-                <div className={`flex flex-col ${isSender ? "items-end" : ""}`}>
-                    <div className={`flex flex-row gap-2 items-end `}>
-                        <div className={`text-slate-500 text-[12px] -translate-y-[6px] lg:text-[12px] ${!isSender && "order-last"}`}>{time}</div>
-                        <div className={`${isSender ? "bg-emerald-200" : "bg-slate-200"} text-slate-900 px-[10px] pt-[8px] pb-[4px] mb-2 rounded-[16px] max-w-[64vw] shadow lg:px-[12px] lg:max-w-[24vw]`}>
-                            {content}
-                        </div>
-                    </div>
-                </div>
-
-            )
-            }
-        </>
-    )
+  return (
+    <>
+      {type === "image" ? (
+        // Case: IMAGE
+        <div className={`flex flex-col ${isSender ? "items-end" : ""}`}>
+          <div className={`flex flex-row gap-2 items-end`}>
+            <div
+              className={`text-slate-500 text-[12px] -translate-y-[6px] lg:text-[12px] ${
+                !isSender && "order-last"
+              }`}
+            >
+              {time}
+            </div>
+            <div>
+              {isFullscreen && (
+                <button
+                  onClick={toggleFullscreen}
+                  className="fixed z-50 top-0 right-0 m-6 p-1 text-white rounded-full cursor-pointer hover:bg-slate-500 md:m-[24px]"
+                >
+                  <Image
+                    className="w-auto h-auto"
+                    src={close}
+                    alt="closeImageButton"
+                    width={32}
+                    height={32}
+                  />
+                </button>
+              )}
+              <div
+                className={`fixed z-40 inset-0 flex justify-center items-center bg-black bg-opacity-80 ${
+                  isFullscreen ? "" : "hidden"
+                }`}
+                // onClick={toggleFullscreen}
+              >
+                <Image
+                  src={content}
+                  alt="chatImage"
+                  fill
+                  style={{
+                    objectFit: "contain",
+                  }}
+                  sizes="w-auto h-auto"
+                  className="w-auto h-auto"
+                />
+              </div>
+              <Image
+                src={content}
+                alt="chatImage"
+                width={268}
+                height={357}
+                className={`mb-2 rounded-[16px] max-w-[64vw] shadow lg:max-w-[24vw] cursor-pointer`}
+                onClick={toggleFullscreen}
+                priority
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Case: TEXT
+        <div className={`flex flex-col ${isSender ? "items-end" : ""}`}>
+          <div className={`flex flex-row gap-2 items-end `}>
+            <div
+              className={`text-slate-500 text-[12px] -translate-y-[6px] lg:text-[12px] ${
+                !isSender && "order-last"
+              }`}
+            >
+              {time}
+            </div>
+            <div
+              className={`${
+                isSender ? "bg-emerald-200" : "bg-slate-200"
+              } text-slate-900 px-[10px] pt-[8px] pb-[4px] mb-2 rounded-[16px] max-w-[64vw] shadow lg:px-[12px] lg:max-w-[24vw]`}
+            >
+              {content}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
 // [
