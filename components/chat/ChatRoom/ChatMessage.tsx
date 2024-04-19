@@ -1,16 +1,17 @@
 "use client";
 
-import { ChatMessage } from "@/drizzle/schemas/chatMessages";
+import { ChatMessageWithName } from "./ChatMessageList";
 import Image from "next/image";
 import { useState } from "react";
 import close from "@/public/icons/close.svg";
 
 type Props = {
-  message: ChatMessage;
+  message: ChatMessageWithName;
   senderId: number;
+  isGroupChat: boolean;
 };
 
-export default function ChatMessage({ message, senderId }: Props) {
+export default function ChatMessage({ message, senderId, isGroupChat }: Props) {
   const { id, userId, createdAt, content, type } = message;
   const isSender = senderId === userId;
   const hours = createdAt.getHours().toString().padStart(2, "0");

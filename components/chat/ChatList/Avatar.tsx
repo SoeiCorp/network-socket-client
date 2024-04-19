@@ -3,10 +3,11 @@ import React from "react";
 
 interface AvatarProps {
   name: string;
-  chatroomId: number;
+  userId: number;
+  className?: string;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ name, chatroomId }) => {
+const Avatar: React.FC<AvatarProps> = ({ name, userId, className }) => {
   const colors: string[] = [
     "bg-red-200",
     "bg-green-200",
@@ -18,18 +19,18 @@ const Avatar: React.FC<AvatarProps> = ({ name, chatroomId }) => {
     "bg-pink-200",
     "bg-gray-200",
   ];
-  const colorIndex: number = chatroomId % colors.length;
+  const colorIndex: number = userId % colors.length;
   const color: string = colors[colorIndex];
 
   return (
     <div className="shrink-0">
       <div
         className={
-          "w-[48px] h-[48px] rounded-full flex items-center justify-center " +
+          `w-[48px] h-[48px] text-lg rounded-full flex items-center justify-center ${className} ` +
           color
         }
       >
-        <div className="text-slate-800 text-lg">{name[0].toUpperCase()}</div>
+        <div className="text-slate-800">{name[0].toUpperCase()}</div>
       </div>
     </div>
   );

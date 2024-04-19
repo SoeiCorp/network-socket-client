@@ -77,7 +77,7 @@ export default function ChatInput({ chatroomId }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-row items-center h-[77px] w-full bg-slate-50 border-t border-[#CBD5E1] px-4 md:h-[84px] lg:px-5"
+      className="flex flex-row items-center h-[77px] w-full bg-slate-50 border-t border-[#CBD5E1] px-4 md:h-[84px] lg:px-5 text-slate-700"
     >
       <input
         type="text"

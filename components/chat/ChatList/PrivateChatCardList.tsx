@@ -34,13 +34,13 @@ export default function PrivateChatCardList({ userId }: Props) {
         createdAt: new Date(),
       },
       {
-        id: 2,
+        id: 3,
         name: "Somying",
         type: "private",
         createdAt: new Date(),
       },
       {
-        id: 2,
+        id: 4,
         name: "Somying",
         type: "private",
         createdAt: new Date(),
