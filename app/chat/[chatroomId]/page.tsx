@@ -19,6 +19,6 @@ export default async function ChatRoomPage({
 
   // TEMPORARY
   const senderId = "123";
-
-  return <ChatRoom chatroomId={chatroomId} senderId={senderId} />;
+  return <div className="text-slate-800">This is chatroomId {chatroomId}</div>;
+  //   return <ChatRoom chatroomId={chatroomId} senderId={senderId} />;
 }
