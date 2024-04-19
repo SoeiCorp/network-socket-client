@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
             message: 'Successfully Registered',
             id: user[0].id,
             name: user[0].name
-        }, { status: 200, headers: { "Set-Cookie": `token=${token}; httpOnly=true; expires=${cookieExpires} ` } })
+        }, { status: 200, headers: { "Set-Cookie": `token=${token}; path=/; httpOnly=true; expires=${cookieExpires} ` } })
     } catch (err) {
         console.log(err)
         return NextResponse.json({
