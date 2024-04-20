@@ -37,6 +37,7 @@ export const config = {
         // 'api/auth/me',
         '/api/chatrooms',
         '/api/chatrooms/group',
-        '/api/chatrooms/:chatroomid/messages'
+        '/api/chatrooms/:chatroomid/messages',
+        '/api/chatrooms/:chatroomid/join'
     ]
 }
