@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
         }).from(users)
         return NextResponse.json({
             success: true,
-            message: 'Successfully get chatroom information',
+            message: 'Successfully get all users',
             data: allUsers
         }, { status: 200 })
     } catch (err) {

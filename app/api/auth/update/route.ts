@@ -3,7 +3,7 @@ import { db } from '@/drizzle/db';
 import { users, NewUser, User } from '@/drizzle/schemas/users';
 import { eq } from 'drizzle-orm';
 
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest) {
     try {
         const userId = Number(req.headers.get('userId'));
         const reqBody = await req.json();
