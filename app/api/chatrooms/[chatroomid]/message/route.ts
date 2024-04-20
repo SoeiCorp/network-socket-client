@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
 import { users, User } from '@/drizzle/schemas/users'
 import jwt from 'jsonwebtoken'
@@ -11,6 +11,8 @@ interface JwtPayload {
 
 export async function GET(req: NextRequest) {
     try {
+        const userId = req.headers.get('userId')
+        console.log(userId)
         const token = req.cookies.get('token')?.value
         if (token) {
             const decoded = jwt.verify(token, process.env.JWT_SECRET || '') as JwtPayload
