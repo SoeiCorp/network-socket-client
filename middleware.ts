@@ -33,7 +33,8 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-        // '/api/chatrooms/:chatroomid/message',
+        '/api/auth/update',
+        // 'api/auth/me',
         '/api/chatrooms/:path*',
     ]
 }

@@ -9,8 +9,8 @@ import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 
 export async function GET(req: NextRequest, { params }: any) {
     try {
-        const userId = req.headers.get('userId')
-        const validChatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, Number(userId)), eq(chatroomUsers.chatroomId, params.chatroomid)))
+        const userId = Number(req.headers.get('userId'))
+        const validChatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid)))
         if (!validChatroom.length) {
             return NextResponse.json({
                 success: false,
