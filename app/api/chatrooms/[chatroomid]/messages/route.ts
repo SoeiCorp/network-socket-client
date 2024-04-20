@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
-import { users, User } from '@/drizzle/schemas/users'
-import jwt from 'jsonwebtoken'
 import { and, eq } from 'drizzle-orm';
 import { chatMessages } from '@/drizzle/schemas/chatMessages';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';
@@ -9,8 +7,8 @@ import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 
 export async function GET(req: NextRequest, { params }: any) {
     try {
-        const userId = req.headers.get('userId')
-        const validChatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, Number(userId)), eq(chatroomUsers.chatroomId, params.chatroomid)))
+        const userId = Number(req.headers.get('userId'))
+        const validChatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid)))
         if (!validChatroom.length) {
             return NextResponse.json({
                 success: false,
