@@ -5,9 +5,9 @@ export async function middleware(req: NextRequest) {
   try {
     const token = req.cookies.get("token")?.value; // Extract token from cookies
 
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+    // if (!token) {
+    //   return NextResponse.redirect(new URL("/login", req.url));
+    // }
 
     // // Verify the token
     // const decoded = jwt.verify(token, 'your_secret_key'); // Replace 'your_secret_key' with your actual secret key
