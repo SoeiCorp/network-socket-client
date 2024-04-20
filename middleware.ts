@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
     const token = req.cookies.get('token')?.value
     if (token && token !== 'none') {
         const { success, data } = await decodeToken(token);
+        console.log(data)
         if (!success || data === null) {
             return NextResponse.json({
                 success: false,
@@ -32,7 +33,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-        '/api/chatrooms/:chatroomid/message',
-        '/api/chatrooms/group'
+        // '/api/chatrooms/:chatroomid/message',
+        '/api/chatrooms/:path*',
     ]
 }

@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
             GROUP BY c.id`)
         return NextResponse.json({
             success: true,
-            message: 'Successfully get all chatrooms',
+            message: 'Successfully get all group chatrooms of user',
             data: result.rows
         }, { status: 200 })
     } catch (err) {
