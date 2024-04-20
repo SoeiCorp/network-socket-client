@@ -37,7 +37,7 @@ export default function RegisterForm() {
     });
   };
 
-  const validateRegisterForm = async () => {
+  const validateRegisterForm = () => {
     const errors: RegisterForm = structuredClone(defaultForm);
     // name
     if (form.name === "") {
@@ -49,11 +49,7 @@ export default function RegisterForm() {
     } else if (z.string().email().safeParse(form.email).success === false) {
       errors.email = "อีเมลไม่ถูกต้อง";
     }
-    // TODO: Backend for check if email exist
-    // else if (await getUniqueEmail(data.email)) {
-    //   errors.email = "อีเมลนี้มีอยู่ในระบบแล้ว";
-    // }
-    // password
+
     if (form.password === "") {
       errors.password = "กรอกรหัสผ่านของคุณ";
     } else if (form.password.length < 8) {
@@ -62,7 +58,7 @@ export default function RegisterForm() {
     // confirm password
     if (form.confirmPassword === "") {
       errors.confirmPassword = "ยืนยันรหัสผ่านของคุณ";
-    } else if (form.confirmPassword != form.password) {
+    } else if (form.confirmPassword !== form.password) {
       errors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
     }
     return errors;
@@ -70,14 +66,34 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validationErrors = await validateRegisterForm();
+    const validationErrors = validateRegisterForm();
     const haveErrors = Object.values(validationErrors).some(
       (x) => x !== null && x !== ""
     );
     if (haveErrors) {
       setErrors(validationErrors);
     } else {
-      // TODO: Backend for register the user
+      // Called Register API
+      try {
+        setPrimaryLoading(true);
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+        if (response.ok) {
+          console.log("User registered successfully");
+          console.log(response);
+        } else {
+          console.error("Registration failed");
+        }
+      } catch (error) {
+        console.error("Error registering user:", error);
+      } finally {
+        setPrimaryLoading(false);
+      }
     }
   };
 

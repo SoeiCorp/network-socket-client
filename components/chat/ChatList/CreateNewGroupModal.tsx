@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 // import { Session } from "next-auth"
 // import updateProfile from "@/actions/profile/updateProfile"
 
-export default function CreateNewGroupModal({
+export default function CreateNewGroup({
     showCreateNewGroup,
     toggleCreateNewGroup,
     // session,
@@ -53,7 +53,7 @@ export default function CreateNewGroupModal({
 
         // redirect กลับมาหน้าโปรไฟล์แบบ rerender page ใหม่
     }
-    // console.log(name)
+    console.log(name)
     return (
         showCreateNewGroup && (
             <div
@@ -67,7 +67,7 @@ export default function CreateNewGroupModal({
                         onClick={(e) => {
                             e.stopPropagation()
                         }}>
-                        <p className="font-bold text-[24px] text-slate-600 mb-[7px]">สร้างกลุ่ม</p>
+                        <p className="font-bold text-[24px] text-slate-600 mb-[7px]">แก้ไขโปรไฟล์</p>
 
                         <div className="flex flex-col gap-1 flex-grow mt-[10px]">
                             <label htmlFor="text-area" className="text-[14px] font-medium text-slate-900">
