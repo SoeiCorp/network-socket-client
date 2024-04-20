@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/drizzle/db';
-import { users, NewUser, User } from '@/drizzle/schemas/users';
+import { users, User } from '@/drizzle/schemas/users';
 import { eq } from 'drizzle-orm';
 
 export async function PUT(req: NextRequest) {

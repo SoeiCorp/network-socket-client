@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
-import { Chatroom, chatrooms } from '@/drizzle/schemas/chatrooms';
-import { ChatroomUser, chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
+import { chatrooms } from '@/drizzle/schemas/chatrooms';
+import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 import { eq } from 'drizzle-orm';
 
 type ChatroomResult = {

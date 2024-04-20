@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({
                 success: true,
                 data: user[0],
-                message: 'Successfully returned'
+                message: 'Successfully returned information about me'
             }, { status: 200 })
         }
         return NextResponse.json({

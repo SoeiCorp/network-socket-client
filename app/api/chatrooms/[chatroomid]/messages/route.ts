@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
-import { users, User } from '@/drizzle/schemas/users'
-import jwt from 'jsonwebtoken'
 import { and, eq } from 'drizzle-orm';
 import { chatMessages } from '@/drizzle/schemas/chatMessages';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';

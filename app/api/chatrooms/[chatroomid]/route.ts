@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
-import { and, eq } from 'drizzle-orm';
-import { chatMessages } from '@/drizzle/schemas/chatMessages';
+import { eq } from 'drizzle-orm';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';
 import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 
