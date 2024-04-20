@@ -12,17 +12,7 @@ interface JwtPayload {
 export async function GET(req: NextRequest) {
     try {
         const userId = req.headers.get('userId')
-        console.log(userId)
-        const token = req.cookies.get('token')?.value
-        if (token) {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || '') as JwtPayload
-            const user: User[] = await db.select().from(users).where(eq(users.id, decoded.id))
-            return NextResponse.json({
-                success: true,
-                data: user[0],
-                message: 'Successfully returned'
-            }, { status: 200 })
-        }
+
         return NextResponse.json({
             success: false,
             message: 'Token not found'
@@ -30,7 +20,7 @@ export async function GET(req: NextRequest) {
     } catch (err) {
         return NextResponse.json({
             success: false,
-            message: 'Error'
+            message: 'There is an error occurred',
         }, { status: 400 })
     }
 }
