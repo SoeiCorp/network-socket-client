@@ -132,7 +132,7 @@ export default function GroupChatCardList({ userId }: Props) {
         ))
       ) : joinedChatrooms.length && notJoinedChatrooms.length ? <div>
         {/* joined */}
-        <div className="text-slate-500 flex flex-col gap-2">
+        <div className="text-slate-500 flex flex-col gap-2 mt-[10px]">
           <div className="ml-[8px]">
             เข้ากลุ่มแล้ว  {`(${joinedChatrooms.length})`}
           </div>

@@ -8,6 +8,7 @@ import Avatar from "./Avatar";
 import { useState, useRef } from "react";
 import ConfirmLeaveChatModal from "./ConfirmLeaveChatModal";
 
+
 type Props = {
     chatroom: Chatroom;
     handleLeaveChat: (chatroomId: number, userId: number) => void
@@ -33,7 +34,7 @@ export default function JoinedGroupChatCard({ chatroom, handleLeaveChat }: Props
         >
             <div className="flex items-center gap-2">
                 <Avatar name={chatroom.name || ""} userId={chatroom.id} />
-                <div className="flex flex-col w-full gap-1">
+                <div className="flex flex-col w-full gap-1 ml-[10px]">
                     <div className="flex flex-row justify-between w-full items-center lg:text-[18px]">
                         <div className="font-medium text-[16px] text-slate-800 truncate max-w-[24ch] lg:max-w-[27ch]">
                             {chatroom.name}
@@ -45,8 +46,8 @@ export default function JoinedGroupChatCard({ chatroom, handleLeaveChat }: Props
                 src={"/icons/leaveChat.svg"}
                 width={27}
                 height={27}
-                alt="plus"
-                className={`mr-[10px] opacity-60 hover:opacity-100 active:opacity-80`}
+                alt="leaveChat"
+                className={`mr-[10px] opacity-60 hover:opacity-100 active:opacity-80 hover:fill-red-400`}
                 onClick={(e) => {
                     e.preventDefault();
                     leaveChatIdRef.current = chatroom.id

@@ -22,7 +22,7 @@ export default function ChatCard({ chatroom }: Props) {
       href={`/chat/${String(chatroom.id)}`}
     >
       <Avatar name={chatroom.name || ""} userId={chatroom.id} />
-      <div className="flex flex-col w-full gap-1">
+      <div className="flex flex-col w-full gap-1 ml-[10px]">
         <div className="flex flex-row justify-between w-full items-center lg:text-[18px]">
           <div className="font-medium text-[16px] text-slate-800 truncate max-w-[24ch] lg:max-w-[27ch]">
             {chatroom.name}

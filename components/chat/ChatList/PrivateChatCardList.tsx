@@ -13,8 +13,8 @@ type Props = {
 
 export default function PrivateChatCardList({ userId }: Props) {
   const [chatrooms, setChatrooms] = useState<Chatroom[]>([]);
-  const [onlineChatroom, setOnlineChatroom] = useState<Chatroom[]>([]);
-  const [offlineChatroom, setofflineChatroom] = useState<Chatroom[]>([]);
+  const [onlineChatrooms, setOnlineChatrooms] = useState<Chatroom[]>([]);
+  const [offlineChatrooms, setofflineChatrooms] = useState<Chatroom[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   // TODO : Fetch all private chatrooms from db
@@ -88,7 +88,8 @@ export default function PrivateChatCardList({ userId }: Props) {
         createdAt: new Date(),
       },
     ];
-    setChatrooms(chatroomsData);
+    setOnlineChatrooms(chatroomsData.filter((chatroom) => (chatroom.id % 2 == 1)));
+    setofflineChatrooms(chatroomsData.filter((chatroom) => (chatroom.id % 2 == 0)));
   }, []);
 
   // TODO : Online chatroom message handler
@@ -104,11 +105,35 @@ export default function PrivateChatCardList({ userId }: Props) {
         Array.from({ length: 12 }).map((_, index) => (
           <ChatCardLoading key={index} />
         ))
-      ) : chatrooms.length ? (
-        chatrooms.map((chatroom, index) => (
-          <ChatCard key={index} chatroom={chatroom} />
-        ))
-      ) : (
+      ) : onlineChatrooms.length && offlineChatrooms.length ? <div>
+        {/* joined */}
+        <div className="text-slate-500 flex flex-col gap-2 mt-[10px]">
+          <div className="ml-[8px]">
+            ออนไลน์  {`(${onlineChatrooms.length})`}
+          </div>
+
+          {
+            onlineChatrooms.map((chatroom, index) => (
+              <ChatCard key={index} chatroom={chatroom} />
+            ))
+          }
+          <div className="w-full flex justify-center mt-[5px]">
+            <hr className="text-slate-500 w-[95%]" />
+          </div>
+        </div>
+
+        {/* บ่ joined */}
+        <div className="text-slate-500 mt-[25px] flex flex-col gap-2">
+          <div className="ml-[8px]">
+            ออฟไลน์ {`(${offlineChatrooms.length})`}
+          </div>
+          {
+            offlineChatrooms.map((chatroom, index) => (
+              <ChatCard key={index + onlineChatrooms.length} chatroom={chatroom} />
+            ))
+          }
+        </div>
+      </div> : (
         <div className="col-span-full">
           <SearchNotFound text="ไม่พบห้องแชท" />
         </div>
