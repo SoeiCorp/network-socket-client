@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { useState } from "react"
-import CreateNewGroup from "./CreateNewGroup"
+import CreateNewGroupModal from "./CreateNewGroupModal"
 
 export default function CreateNewGroupButton() {
     const [showCreateNewGroup, setShowCreateNewGroup] = useState(false)
@@ -26,7 +26,7 @@ export default function CreateNewGroupButton() {
                     สร้างกลุ่ม
                 </p>
             </button>
-            <CreateNewGroup showCreateNewGroup={showCreateNewGroup} toggleCreateNewGroup={toggleCreateNewGroup} />
+            <CreateNewGroupModal showCreateNewGroup={showCreateNewGroup} toggleCreateNewGroup={toggleCreateNewGroup} />
         </div>
     )
 }

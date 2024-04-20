@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import DangerButton from "@/components/public/DangerButton"
-import EditProfile from "./EditProfile"
+import EditProfileModal from "./EditProfileModal"
 type Name = {
     name: string
 }
@@ -52,7 +52,7 @@ export default function Profile(props: Name) {
                 </DangerButton>
 
                 {/* Edit profile */}
-                <EditProfile
+                <EditProfileModal
                     showEditProfile={showEditProfile}
                     toggleEditProfile={toggleEditProfile}
                     oldName={name}

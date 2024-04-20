@@ -6,28 +6,30 @@ import { useRouter } from "next/navigation"
 // import { Session } from "next-auth"
 // import updateProfile from "@/actions/profile/updateProfile"
 
-export default function CreateNewGroup({
-    showCreateNewGroup,
-    toggleCreateNewGroup,
+export default function EditProfileModal({
+    showEditProfile,
+    toggleEditProfile,
+    oldName,
     // session,
     // userId,
 }: {
-    showCreateNewGroup: boolean
-    toggleCreateNewGroup: () => void
+    showEditProfile: boolean
+    toggleEditProfile: () => void
+    oldName: string
     // session: Session | null
     // userId: string
 }) {
-    const [groupName, setGroupName] = useState("")
+    const [name, setName] = useState(oldName)
     const [isDisabled, setDisabled] = useState(false)
     const [primaryLoading, setPrimaryLoading] = useState(false)
 
     const router = useRouter()
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setGroupName(event.target.value)
+        setName(event.target.value)
     }
 
-    const handleCreateNewGroup = async () => {
+    const handleEditProfile = async () => {
         setPrimaryLoading((prev) => !prev)
         setDisabled(true)
 
@@ -40,26 +42,26 @@ export default function CreateNewGroup({
         // }
 
         const formDataObject = new FormData()
-        formDataObject.append("groupName", groupName)
+        formDataObject.append("name", name)
         // formDataObject.append("userId", userId)
 
         // const result = await updateProfile(formDataObject)
 
         // name แก้ไขทุกรอบที่ submit
-        toast.success("สร้างกลุ่มสำเร็จ")
+        toast.success("แก้ไขโปรไฟล์สำเร็จ")
         setPrimaryLoading((prev) => !prev)
         setDisabled(false)
-        toggleCreateNewGroup()
+        toggleEditProfile()
 
         // redirect กลับมาหน้าโปรไฟล์แบบ rerender page ใหม่
     }
     console.log(name)
     return (
-        showCreateNewGroup && (
+        showEditProfile && (
             <div
                 className="w-full h-full duration-300 overflow-x-hidden fixed inset-0 z-50 bg-[#262626] bg-opacity-[60%] px-[20px]"
                 onClick={() => {
-                    toggleCreateNewGroup()
+                    toggleEditProfile()
                 }}>
                 <div className="flex justify-center">
                     <div
@@ -71,21 +73,21 @@ export default function CreateNewGroup({
 
                         <div className="flex flex-col gap-1 flex-grow mt-[10px]">
                             <label htmlFor="text-area" className="text-[14px] font-medium text-slate-900">
-                                ชื่อกลุ่ม
+                                ชื่อ
                             </label>
                             <textarea
                                 id="text-area"
                                 name="name"
                                 className="h-[100px] rounded-[6px] border border-[#CBD5E1] px-[10px] py-[5px] "
                                 onChange={handleChange}
-                                value={groupName}></textarea>
+                                value={name}></textarea>
                         </div>
 
                         <div className="mt-[20px] flex justify-between">
                             <button
                                 className="w-[47%] rounded-[6px] border border-[#E2E8F0] text-[#0F172A] py-[10px] hover:opacity-[80%] active:opacity-[60%]"
                                 onClick={() => {
-                                    toggleCreateNewGroup()
+                                    toggleEditProfile()
                                 }}>
                                 ยกเลิก
                             </button>
@@ -94,9 +96,9 @@ export default function CreateNewGroup({
                                 isDisabled={isDisabled}
                                 className="w-[47%] rounded-[6px] text-[#FFFFFF] bg-[#334155] py-[10px] hover:opacity-[80%] active:opacity-[60%]"
                                 isLoading={primaryLoading}
-                                onClick={handleCreateNewGroup}
+                                onClick={handleEditProfile}
                                 loadingMessage="กำลังดำเนินการ">
-                                ยืนยันการสร้างกลุ่ม
+                                ยืนยันการแก้ไข
                             </PrimaryButton>
                         </div>
                     </div>
