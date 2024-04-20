@@ -13,9 +13,7 @@ export async function createToken(user: any) {
 }
 
 export async function decodeToken(token: string) {
-    console.log(token)
     const decoded = await jose.jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
-    console.log(decoded)
     if (!decoded.payload.id) {
         return { success: false, data: null }
     }
