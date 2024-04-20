@@ -53,7 +53,6 @@ export default function CreateNewGroup({
 
         // redirect กลับมาหน้าโปรไฟล์แบบ rerender page ใหม่
     }
-    console.log(name)
     return (
         showCreateNewGroup && (
             <div
