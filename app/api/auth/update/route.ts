@@ -10,8 +10,8 @@ export async function POST(req: NextRequest) {
         const user: User[] = await db.update(users).set({ name: reqBody.name }).where(eq(users.id, userId)).returning();
         return NextResponse.json({
             success: true,
-            message: 'Successfully Updated a user',
-            data: user
+            message: 'Successfully updated a user',
+            data: user[0]
         }, { status: 200 })
     } catch (err) {
         console.log(err)

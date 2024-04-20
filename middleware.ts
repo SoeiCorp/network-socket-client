@@ -35,6 +35,7 @@ export const config = {
     matcher: [
         '/api/auth/update',
         // 'api/auth/me',
-        '/api/chatrooms/:path*',
+        '/api/chatrooms/group',
+        '/api/chatrooms/:chatroomid/messages'
     ]
 }
