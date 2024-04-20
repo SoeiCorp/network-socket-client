@@ -3,8 +3,6 @@ import PrimaryButton from "@/components/public/PrimaryButton"
 import toast from "react-hot-toast"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-// import { Session } from "next-auth"
-// import updateProfile from "@/actions/profile/updateProfile"
 
 export default function EditProfile({
     showEditProfile,
