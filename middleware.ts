@@ -7,7 +7,7 @@ import { decodeToken } from "./lib/auth";
 
 export async function middleware(req: NextRequest) {
     const token = req.cookies.get('token')?.value
-    if (token) {
+    if (token && token !== 'none') {
         const { success, data } = await decodeToken(token);
         if (!success || data === null) {
             return NextResponse.json({
@@ -32,6 +32,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-        '/api/chatrooms/:chatroomid/message'
+        '/api/chatrooms/:chatroomid/message',
+        '/api/chatrooms/group'
     ]
 }
