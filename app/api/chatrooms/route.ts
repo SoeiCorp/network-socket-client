@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             message: "Chatroom already created",
             data: foundChatroom.rows[0],
           },
-          { status: 400 }
+          { status: 200 }
         );
       }
     }
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
         message: "Successfully create a chatroom",
         data: chatroom[0],
       },
-      { status: 200 }
+      { status: 201 }
     );
   } catch (err) {
     return NextResponse.json(
