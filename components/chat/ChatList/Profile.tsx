@@ -71,9 +71,6 @@ export default function Profile() {
         <EditProfileModal
           showEditProfile={showEditProfile}
           toggleEditProfile={toggleEditProfile}
-          oldName={name}
-          // session={session}
-          // userId={userId}
         />
       </div>
     </div>

@@ -1,3 +1,5 @@
+"use server";
+
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/drizzle/db";
 import { Chatroom, chatrooms } from "@/drizzle/schemas/chatrooms";
@@ -5,7 +7,6 @@ import { ChatroomUser, chatroomUsers } from "@/drizzle/schemas/chatroomUsers";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { users } from "@/drizzle/schemas/users";
-import { revalidateTag } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -61,7 +62,6 @@ export async function POST(req: NextRequest) {
         })
         .returning();
     }
-    revalidateTag("chatrooms");
     return NextResponse.json(
       {
         success: true,

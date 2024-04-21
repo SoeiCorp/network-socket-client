@@ -1,4 +1,5 @@
 "use client";
+
 import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -8,21 +9,14 @@ import { useAppContext } from "@/context";
 export default function EditProfileModal({
   showEditProfile,
   toggleEditProfile,
-  oldName,
-}: // session,
-// userId,
-{
+}: {
   showEditProfile: boolean;
   toggleEditProfile: () => void;
-  oldName: string;
-  // session: Session | null
-  // userId: string
 }) {
-  const [name, setName] = useState(oldName);
+  const { context, setTrigger } = useAppContext();
+  const [name, setName] = useState("");
   const [isDisabled, setDisabled] = useState(false);
   const [primaryLoading, setPrimaryLoading] = useState(false);
-  const router = useRouter();
-  const { context, setTrigger } = useAppContext();
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setName(event.target.value);
@@ -42,6 +36,7 @@ export default function EditProfileModal({
       if (response.ok) {
         console.log("Edit name successfully");
         toast.success("แก้ไขชื่อสำเร็จ");
+        setName("");
         setTrigger((prev: boolean) => !prev);
       } else {
         console.error("Edit name failed");
@@ -89,6 +84,7 @@ export default function EditProfileModal({
                 className="h-[100px] rounded-[6px] border border-[#CBD5E1] px-[10px] py-[5px] "
                 onChange={handleChange}
                 value={name}
+                placeholder={context.name}
               ></textarea>
             </div>
 

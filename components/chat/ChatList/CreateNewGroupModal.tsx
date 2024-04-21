@@ -3,8 +3,7 @@ import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { Session } from "next-auth"
-// import updateProfile from "@/actions/profile/updateProfile"
+import { revalidateChatrooms } from "@/lib/actions";
 
 export default function CreateNewGroup({
   showCreateNewGroup,
@@ -40,6 +39,7 @@ export default function CreateNewGroup({
       });
       if (response.ok) {
         console.log("Create group chatroom successfully");
+        await revalidateChatrooms();
         toast.success("สร้างกลุ่มสำเร็จ");
       } else {
         console.error("Create group chatroom fail");

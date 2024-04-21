@@ -9,6 +9,7 @@ import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import { useAppContext } from "@/context";
 import { ChatroomResult } from "@/app/chat/layout";
 import toast from "react-hot-toast";
+import { revalidateChatrooms } from "@/lib/actions";
 
 interface Props {
   groupChatrooms: ChatroomResult[];
@@ -50,7 +51,7 @@ export default function GroupChatCardList({ groupChatrooms }: Props) {
 
   const handleJoinChat = async (chatroomId: number) => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await fetch(`/api/chatrooms/${chatroomId}/join`, {
         method: "POST",
         headers: {
@@ -60,6 +61,7 @@ export default function GroupChatCardList({ groupChatrooms }: Props) {
       });
       if (response.ok) {
         console.log("Join group successfully");
+        await revalidateChatrooms();
         toast.success("เข้าร่วมกลุ่มสำเร็จ");
       } else {
         console.error("Join group fail");
@@ -69,7 +71,7 @@ export default function GroupChatCardList({ groupChatrooms }: Props) {
       console.error("Error join group:", error);
       toast.error("System error");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
