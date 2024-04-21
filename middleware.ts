@@ -1,33 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { db } from '@/drizzle/db';
+import { users, User } from '@/drizzle/schemas/users'
+import jwt from 'jsonwebtoken'
+import { eq } from 'drizzle-orm';
+import { decodeToken } from "./lib/auth";
 
 export async function middleware(req: NextRequest) {
-  try {
-    const token = req.cookies.get("token")?.value; // Extract token from cookies
-
-    // if (!token) {
-    //   return NextResponse.redirect(new URL("/login", req.url));
-    // }
-
-    // // Verify the token
-    // const decoded = jwt.verify(token, 'your_secret_key'); // Replace 'your_secret_key' with your actual secret key
-
-    // // You can now access the decoded token payload
-    // console.log(decoded);
-
-    // // Proceed with the request
-    // return NextResponse.next();
-  } catch (error) {
-    // console.error(error);
-    // // If token is not found or invalid, return an error response
-    // return NextResponse.json({
-    //     success: false,
-    //     message: 'Unauthorized',
-    //     error: error.message
-    // }, { status: 401 });
-  }
+    const token = req.cookies.get('token')?.value
+    if (token && token !== 'none') {
+        const { success, data } = await decodeToken(token);
+        console.log(data)
+        if (!success || data === null) {
+            return NextResponse.json({
+                success: false,
+                message: 'Invalid token'
+            }, { status: 400 })
+        }
+        const requestHeaders = new Headers(req.headers);
+        requestHeaders.set('userId', data.toString())
+        const response = NextResponse.next({
+            request: {
+                headers: requestHeaders
+            }
+        })
+        return response;
+    }
+    return NextResponse.json({
+        success: false,
+        message: 'Token not found'
+    }, { status: 404 })
 }
 
 export const config = {
-  matcher: ["/chat/:path*"],
-};
+    matcher: [
+        // 'api/auth/me',
+        '/api/auth/update',
+        '/api/chatrooms',
+        '/api/chatrooms/group',
+        '/api/chatrooms/:chatroomid/messages',
+        '/api/chatrooms/:chatroomid/join'
+    ]
+}

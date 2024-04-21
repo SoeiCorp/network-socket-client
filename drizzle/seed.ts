@@ -23,7 +23,7 @@ const main = async () => {
         usersData.push({
             name: faker.internet.userName(),
             email: faker.internet.email(),
-            password: "root1234"
+            password: "$2b$10$Fmsyc09Qe.5/Zru9qlVZMeyIdEkzUcz.wScNNIeCt7yTSeANFAaUu" // root1234
         });
     }
     for (let i = 0; i < 5; i++) {

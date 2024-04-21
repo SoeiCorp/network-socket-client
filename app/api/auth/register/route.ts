@@ -13,29 +13,18 @@ export async function POST(req: NextRequest) {
     const user: User[] = await db.insert(users).values(reqBody).returning();
     const { token, cookieExpires } = await createToken(user[0]);
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Successfully Registered",
-        id: user[0].id,
-        name: user[0].name,
-      },
-      {
-        status: 200,
-        headers: {
-          "Set-Cookie": `token=${token}; Path=/; HttpOnly=true; Expires=${cookieExpires} `,
-        },
-      }
-    );
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "There is an error occurred",
-        error: err,
-      },
-      { status: 400 }
-    );
-  }
+        return NextResponse.json({
+            success: true,
+            message: 'Successfully Registered',
+            id: user[0].id,
+            name: user[0].name
+        }, { status: 200, headers: { "Set-Cookie": `token=${token}; path=/; httpOnly=true; expires=${cookieExpires} ` } })
+    } catch (err) {
+        console.log(err)
+        return NextResponse.json({
+            success: false,
+            message: 'There is an error occurred',
+            error: err
+        }, { status: 400 })
+    }
 }
