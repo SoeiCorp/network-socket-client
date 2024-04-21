@@ -7,6 +7,7 @@ import PrimaryButton from "../public/PrimaryButton";
 import Link from "next/link";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type RegisterForm = {
   email: string;
@@ -34,7 +35,7 @@ export default function LoginForm() {
     });
   };
 
-  const validateRegisterForm = async () => {
+  const validateRegisterForm = () => {
     const errors: RegisterForm = structuredClone(defaultForm);
     // email
     if (form.email === "") {
@@ -53,7 +54,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validationErrors = await validateRegisterForm();
+    const validationErrors = validateRegisterForm();
     const haveErrors = Object.values(validationErrors).some(
       (x) => x !== null && x !== ""
     );
@@ -72,12 +73,18 @@ export default function LoginForm() {
         });
         if (response.ok) {
           console.log("User logged in successfully");
+          toast.success("เข้าสู่ระบบสำเร็จ");
           router.push("/chat");
         } else {
           console.error("Login failed");
+          setErrors({
+            email: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+            password: " ",
+          });
         }
       } catch (error) {
         console.error("Error login user:", error);
+        toast.error("System error");
       } finally {
         setPrimaryLoading(false);
       }

@@ -8,6 +8,7 @@ import PrimaryButton from "../public/PrimaryButton";
 import Link from "next/link";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type RegisterForm = {
   email: string;
@@ -87,12 +88,20 @@ export default function RegisterForm() {
         });
         if (response.ok) {
           console.log("User registered successfully");
+          toast.success("สร้างบัญชีสำเร็จ");
           router.push("/chat");
         } else {
           console.error("Registration failed");
+          setErrors({
+            email: "อีเมลนี้ถูกใช้งานแล้ว",
+            password: "",
+            confirmPassword: "",
+            name: "",
+          });
         }
       } catch (error) {
         console.error("Error registering user:", error);
+        toast.error("System error");
       } finally {
         setPrimaryLoading(false);
       }
