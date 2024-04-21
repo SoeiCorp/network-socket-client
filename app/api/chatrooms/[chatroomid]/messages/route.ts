@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { chatMessages } from '@/drizzle/schemas/chatMessages';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';
 import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
+import { User, users } from '@/drizzle/schemas/users';
 
 export async function GET(req: NextRequest, { params }: any) {
     try {
@@ -22,11 +23,21 @@ export async function GET(req: NextRequest, { params }: any) {
                 message: 'Chatroom not found',
             }, { status: 404 })
         }
-        const result = await db.select().from(chatMessages).where(eq(chatMessages.chatroomId, params.chatroomid));
+        const result = await db.select({
+            users: users,
+            chat_messages: chatMessages
+        }).from(chatMessages).leftJoin(users, eq(chatMessages.userId, users.id)).where(eq(chatMessages.chatroomId, params.chatroomid));
+        const modifiedResult = result.map(item => {
+            const { chat_messages, users } = item;
+            return {
+                ...chat_messages,
+                userName: users?.name
+            };
+        });
         return NextResponse.json({
             success: true,
             message: 'Successfully get all chat messages',
-            data: result
+            data: modifiedResult
         }, { status: 200 })
     } catch (err) {
         return NextResponse.json({

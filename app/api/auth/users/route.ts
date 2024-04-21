@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
 import { users } from '@/drizzle/schemas/users';
 
-
 export async function GET(req: NextRequest) {
     try {
         const allUsers = await db.select({

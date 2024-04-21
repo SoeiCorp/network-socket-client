@@ -6,6 +6,8 @@ import PasswordInput from "./PasswordInput";
 import PrimaryButton from "../public/PrimaryButton";
 import Link from "next/link";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type RegisterForm = {
   email: string;
@@ -18,6 +20,7 @@ const defaultForm = {
 };
 
 export default function LoginForm() {
+  const router = useRouter();
   const [form, setForm] = useState<RegisterForm>(structuredClone(defaultForm));
   const [errors, setErrors] = useState<RegisterForm>(
     structuredClone(defaultForm)
@@ -32,7 +35,7 @@ export default function LoginForm() {
     });
   };
 
-  const validateRegisterForm = async () => {
+  const validateRegisterForm = () => {
     const errors: RegisterForm = structuredClone(defaultForm);
     // email
     if (form.email === "") {
@@ -51,21 +54,40 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validationErrors = await validateRegisterForm();
+    const validationErrors = validateRegisterForm();
     const haveErrors = Object.values(validationErrors).some(
       (x) => x !== null && x !== ""
     );
     if (haveErrors) {
       setErrors(validationErrors);
     } else {
-      // TODO: Backend for login the user
-      await fetch('/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password
-        })
-      })
+      // Called Login API
+      try {
+        setPrimaryLoading(true);
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+        if (response.ok) {
+          console.log("User logged in successfully");
+          toast.success("เข้าสู่ระบบสำเร็จ");
+          router.push("/chat");
+        } else {
+          console.error("Login failed");
+          setErrors({
+            email: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+            password: " ",
+          });
+        }
+      } catch (error) {
+        console.error("Error login user:", error);
+        toast.error("System error");
+      } finally {
+        setPrimaryLoading(false);
+      }
     }
   };
 

@@ -7,6 +7,8 @@ import ConfirmPasswordInput from "./ConfirmPasswordInput";
 import PrimaryButton from "../public/PrimaryButton";
 import Link from "next/link";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type RegisterForm = {
   email: string;
@@ -23,6 +25,7 @@ const defaultForm = {
 };
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [form, setForm] = useState<RegisterForm>(structuredClone(defaultForm));
   const [errors, setErrors] = useState<RegisterForm>(
     structuredClone(defaultForm)
@@ -37,7 +40,7 @@ export default function RegisterForm() {
     });
   };
 
-  const validateRegisterForm = async () => {
+  const validateRegisterForm = () => {
     const errors: RegisterForm = structuredClone(defaultForm);
     // name
     if (form.name === "") {
@@ -49,11 +52,7 @@ export default function RegisterForm() {
     } else if (z.string().email().safeParse(form.email).success === false) {
       errors.email = "อีเมลไม่ถูกต้อง";
     }
-    // TODO: Backend for check if email exist
-    // else if (await getUniqueEmail(data.email)) {
-    //   errors.email = "อีเมลนี้มีอยู่ในระบบแล้ว";
-    // }
-    // password
+
     if (form.password === "") {
       errors.password = "กรอกรหัสผ่านของคุณ";
     } else if (form.password.length < 8) {
@@ -62,7 +61,7 @@ export default function RegisterForm() {
     // confirm password
     if (form.confirmPassword === "") {
       errors.confirmPassword = "ยืนยันรหัสผ่านของคุณ";
-    } else if (form.confirmPassword != form.password) {
+    } else if (form.confirmPassword !== form.password) {
       errors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
     }
     return errors;
@@ -70,22 +69,42 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validationErrors = await validateRegisterForm();
+    const validationErrors = validateRegisterForm();
     const haveErrors = Object.values(validationErrors).some(
       (x) => x !== null && x !== ""
     );
     if (haveErrors) {
       setErrors(validationErrors);
     } else {
-      // TODO: Backend for register the user
-      await fetch('/api/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: form.email,
-          name: form.name,
-          password: form.password
-        })
-      })
+      // Called Register API
+      try {
+        setPrimaryLoading(true);
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+        if (response.ok) {
+          console.log("User registered successfully");
+          toast.success("สร้างบัญชีสำเร็จ");
+          router.push("/chat");
+        } else {
+          console.error("Registration failed");
+          setErrors({
+            email: "อีเมลนี้ถูกใช้งานแล้ว",
+            password: "",
+            confirmPassword: "",
+            name: "",
+          });
+        }
+      } catch (error) {
+        console.error("Error registering user:", error);
+        toast.error("System error");
+      } finally {
+        setPrimaryLoading(false);
+      }
     }
   };
 
