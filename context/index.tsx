@@ -14,12 +14,13 @@ const defaultContext: ContextType = {
   name: "กำลังโหลด...",
 };
 
-const AppContext = createContext<ContextType>(defaultContext);
+const AppContext = createContext<any>(undefined);
 
 export const AppWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [context, setContext] = useState<ContextType>(defaultContext);
+  const [trigger, setTrigger] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,11 +40,14 @@ export const AppWrapper: React.FC<{ children: React.ReactNode }> = ({
         toast.error("Failed to fetch user data");
       }
     };
-
     fetchData();
-  }, []);
+  }, [trigger]);
 
-  return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ context, setTrigger }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
 
 export const useAppContext = () => useContext(AppContext);

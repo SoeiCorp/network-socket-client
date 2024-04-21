@@ -9,7 +9,9 @@ import { useAppContext } from "@/context";
 
 export default function Profile() {
   const router = useRouter();
-  const { userId, name } = useAppContext();
+  const { context, setTrigger } = useAppContext();
+  const name = context.name;
+  const userId = context.userId;
   const [showEditProfile, setShowEditProfile] = useState(false);
   // console.log(name.toUpperCase());
 

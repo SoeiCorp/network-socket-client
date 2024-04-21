@@ -13,7 +13,9 @@ export default function PrivateChatCardList() {
   const [onlineChatrooms, setOnlineChatrooms] = useState<Chatroom[]>([]);
   const [offlineChatrooms, setofflineChatrooms] = useState<Chatroom[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { userId, name } = useAppContext();
+  const { context, setTrigger } = useAppContext();
+  const name = context.name;
+  const userId = context.userId;
 
   // TODO : Fetch all private chatrooms from db
   useEffect(() => {

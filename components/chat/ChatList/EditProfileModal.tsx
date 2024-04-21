@@ -3,6 +3,7 @@ import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/context";
 
 export default function EditProfileModal({
   showEditProfile,
@@ -20,8 +21,8 @@ export default function EditProfileModal({
   const [name, setName] = useState(oldName);
   const [isDisabled, setDisabled] = useState(false);
   const [primaryLoading, setPrimaryLoading] = useState(false);
-
   const router = useRouter();
+  const { context, setTrigger } = useAppContext();
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setName(event.target.value);
@@ -31,29 +32,29 @@ export default function EditProfileModal({
     try {
       setPrimaryLoading(true);
       setDisabled(true);
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
+      const response = await fetch("/api/auth/update", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name: name }),
       });
       if (response.ok) {
         console.log("Edit name successfully");
         toast.success("แก้ไขชื่อสำเร็จ");
+        setTrigger((prev: boolean) => !prev);
       } else {
         console.error("Edit name failed");
-        toast.error("แก้ไขชื่อไม่สำเร็จ")
+        toast.error("แก้ไขชื่อไม่สำเร็จ");
       }
     } catch (error) {
-      console.error("Error ำกระ user:", error);
+      console.error("Error edit user:", error);
       toast.error("System error");
     } finally {
       setPrimaryLoading(false);
       setDisabled(false);
       toggleEditProfile();
     }
-    // redirect กลับมาหน้าโปรไฟล์แบบ rerender page ใหม่
   };
   console.log(name);
   return (

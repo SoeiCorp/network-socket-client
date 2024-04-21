@@ -13,7 +13,9 @@ export default function GroupChatCardList() {
   const [joinedChatrooms, setJoinedChatrooms] = useState<Chatroom[]>([]);
   const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<Chatroom[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { userId, name } = useAppContext();
+  const { context, setTrigger } = useAppContext();
+  const name = context.name;
+  const userId = context.userId;
 
   // TODO : Fetch all group chatrooms from db
   useEffect(() => {
