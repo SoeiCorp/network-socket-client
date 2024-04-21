@@ -7,8 +7,13 @@ import SearchNotFound from "./SearchNotFound";
 import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import { User } from "@/drizzle/schemas/users";
 import { useAppContext } from "@/context";
+import { ChatroomResult } from "@/app/chat/layout";
 
-export default function PrivateChatCardList() {
+interface Props {
+  privateChatrooms: ChatroomResult[];
+}
+
+export default function PrivateChatCardList({ privateChatrooms }: Props) {
   const [chatrooms, setChatrooms] = useState<Chatroom[]>([]);
   const [onlineChatrooms, setOnlineChatrooms] = useState<Chatroom[]>([]);
   const [offlineChatrooms, setofflineChatrooms] = useState<Chatroom[]>([]);

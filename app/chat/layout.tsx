@@ -10,12 +10,26 @@ import CreateNewGroupButton from "@/components/chat/ChatList/CreateNewGroupButto
 import Profile from "@/components/chat/ChatList/Profile";
 import { AppWrapper } from "@/context";
 
+export type ChatroomResult = {
+  id: number;
+  name: string | null;
+  type: string;
+  createdAt: Date;
+  numUsers: number;
+};
+
 export default function NavigationLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isPrivateChat, setPrivateChat] = useState(false);
+  // Switch between private and group chatrooms list
+  const [isPrivateChat, setPrivateChat] = useState(true);
+  // Pass to private and group chatrooms component
+  const [privateChatrooms, setPrivateChatrooms] = useState<ChatroomResult[]>(
+    []
+  );
+  const [groupChatrooms, setGroupChatrooms] = useState<ChatroomResult[]>([]);
 
   // Connect to websocket
   useEffect(() => {
@@ -24,6 +38,38 @@ export default function NavigationLayout({
       - connect to ws
       - set incoming message handler
     */
+  }, []);
+
+  useEffect(() => {
+    const fetchAllChatrooms = async () => {
+      const privateChatrooms: ChatroomResult[] = [];
+      const groupChatrooms: ChatroomResult[] = [];
+      try {
+        const response = await fetch("/api/chatrooms/all", {
+          next: { tags: ["chatrooms"] },
+        });
+        if (response.ok) {
+          console.log("Get all chatrooms success");
+          const res = await response.json();
+          res.data.forEach((chatroom: ChatroomResult) => {
+            if (chatroom.type === "private") {
+              privateChatrooms.push(chatroom);
+            } else if (chatroom.type === "group") {
+              groupChatrooms.push(chatroom);
+            }
+          });
+          // console.log("Private", privateChatrooms);
+          // console.log("Gorup", groupChatrooms);
+          setPrivateChatrooms(privateChatrooms);
+          setGroupChatrooms(groupChatrooms);
+        } else {
+          throw new Error("Get all chatrooms failed");
+        }
+      } catch (error) {
+        console.error("Error getting all chatrooms:", error);
+      }
+    };
+    fetchAllChatrooms();
   }, []);
 
   return (
@@ -72,11 +118,11 @@ export default function NavigationLayout({
           {/* ChatCardList base on isGroupChat */}
           {isPrivateChat ? (
             <div className="overflow-y-auto mt-[10px] h-[75%]">
-              <PrivateChatCardList />
+              <PrivateChatCardList privateChatrooms={privateChatrooms} />
             </div>
           ) : (
             <div className="overflow-y-auto mt-[10px] h-[70%]">
-              <GroupChatCardList />
+              <GroupChatCardList groupChatrooms={groupChatrooms} />
             </div>
           )}
 

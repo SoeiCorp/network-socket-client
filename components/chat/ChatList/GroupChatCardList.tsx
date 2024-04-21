@@ -7,128 +7,99 @@ import ChatCardLoading from "./ChatCardLoading";
 import SearchNotFound from "./SearchNotFound";
 import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import { useAppContext } from "@/context";
+import { ChatroomResult } from "@/app/chat/layout";
+import toast from "react-hot-toast";
 
-export default function GroupChatCardList() {
-  // const [chatrooms, setChatrooms] = useState<Chatroom[]>([]);
-  const [joinedChatrooms, setJoinedChatrooms] = useState<Chatroom[]>([]);
-  const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<Chatroom[]>([]);
+interface Props {
+  groupChatrooms: ChatroomResult[];
+}
+
+export default function GroupChatCardList({ groupChatrooms }: Props) {
+  const [joinedChatrooms, setJoinedChatrooms] = useState<ChatroomResult[]>([]);
+  const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<
+    ChatroomResult[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { context, setTrigger } = useAppContext();
   const name = context.name;
   const userId = context.userId;
 
-  // TODO : Fetch all group chatrooms from db
+  // TODO : Fetch all joined group chatrooms from db
   useEffect(() => {
-    // TEMPORARY
-    const chatroomsData: Chatroom[] = [
-      {
-        id: 1,
-        name: "Grop1",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 2,
-        name: "Gropu2",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 3,
-        name: "Gropu3",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 4,
-        name: "Gropu4",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 5,
-        name: "Gropu5",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 6,
-        name: "Gropu6",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 7,
-        name: "Gropu7",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 8,
-        name: "Gropu8",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 9,
-        name: "Gropu9",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 10,
-        name: "Gropu10",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 11,
-        name: "Gropu11",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-      {
-        id: 12,
-        name: "Gropu12",
-        type: "group",
-        createdAt: new Date(),
-        // members: 2
-      },
-    ];
-    setJoinedChatrooms(
-      chatroomsData.filter((chatroom) => chatroom.id % 2 == 1)
-    );
-    setNotJoinedChatrooms(
-      chatroomsData.filter((chatroom) => chatroom.id % 2 == 0)
-    );
-  }, []);
+    const fetchChatGroupData = async () => {
+      try {
+        const response = await fetch("/api/chatrooms/group", {
+          method: "GET",
+        });
+        if (response.ok) {
+          console.log("Get all group chatrooms of user sucess");
+          const res = await response.json();
+          const joined = res.data;
+          const notJoined = getUnjoinedChatrooms(groupChatrooms, joined);
+          setJoinedChatrooms(joined);
+          setNotJoinedChatrooms(notJoined);
+        } else {
+          throw new Error("Get all group chatrooms of user failed");
+        }
+      } catch (error) {
+        console.error("Error get all group chatrooms of user:", error);
+      }
+    };
+    fetchChatGroupData();
+  }, [groupChatrooms]);
 
-  const handleJoinChat = (chatroomId: number, userId: number) => {
-    //do something to join this chatId and rerender
-    console.log("j", chatroomId);
+  const handleJoinChat = async (chatroomId: number) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/chatrooms/${chatroomId}/join`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatroomid: chatroomId }),
+      });
+      if (response.ok) {
+        console.log("Join group successfully");
+        toast.success("เข้าร่วมกลุ่มสำเร็จ");
+      } else {
+        console.error("Join group fail");
+        toast.error("เข้าร่วมกลุ่มไม่สำเร็จ");
+      }
+    } catch (error) {
+      console.error("Error join group:", error);
+      toast.error("System error");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLeaveChat = (chatroomId: number, userId: number) => {
-    //do something to leave this chatId and rerender
-    console.log("l", chatroomId);
+  const handleLeaveChat = async (chatroomId: number) => {
+    // try {
+    //   setLoading(true);
+    //   const response = await fetch(`/api/chatrooms/${chatroomId}/join`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ chatroomid: chatroomId }),
+    //   });
+    //   if (response.ok) {
+    //     console.log("Join group successfully");
+    //     toast.success("เข้าร่วมกลุ่มสำเร็จ");
+    //   } else {
+    //     console.error("Join group fail");
+    //     toast.error("เข้าร่วมกลุ่มไม่สำเร็จ");
+    //   }
+    // } catch (error) {
+    //   console.error("Error join group:", error);
+    //   toast.error("System error");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
-  // TODO : Logic to get joinedChatrooms and notJoinedChatrooms
-  // console.log(joinedChatrooms);
   return (
     <div>
-      {/* TODO : UI to display joinedChatrooms and notJoinedChatrooms */}
       {loading ? (
         Array.from({ length: 12 }).map((_, index) => (
           <ChatCardLoading key={index} />
@@ -175,3 +146,15 @@ export default function GroupChatCardList() {
     </div>
   );
 }
+
+const getUnjoinedChatrooms = (
+  all: ChatroomResult[],
+  joined: ChatroomResult[]
+): ChatroomResult[] => {
+  // Filter out the chatrooms that are not in the joinedChatrooms array
+  const unjoined = all.filter(
+    (chatroom) =>
+      !joined.some((joinedChatroom) => joinedChatroom.id === chatroom.id)
+  );
+  return unjoined;
+};

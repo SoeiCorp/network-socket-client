@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation";
 import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import Avatar from "./Avatar";
 import { useRef } from "react";
+import { ChatroomResult } from "@/app/chat/layout";
 
 type Props = {
-    chatroom: Chatroom;
+    chatroom: ChatroomResult;
     handleJoinChat: (chatroomId: number, userId: number) => void;
 };
 
