@@ -7,6 +7,7 @@ import ConfirmPasswordInput from "./ConfirmPasswordInput";
 import PrimaryButton from "../public/PrimaryButton";
 import Link from "next/link";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 type RegisterForm = {
   email: string;
@@ -23,6 +24,7 @@ const defaultForm = {
 };
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [form, setForm] = useState<RegisterForm>(structuredClone(defaultForm));
   const [errors, setErrors] = useState<RegisterForm>(
     structuredClone(defaultForm)
@@ -85,7 +87,7 @@ export default function RegisterForm() {
         });
         if (response.ok) {
           console.log("User registered successfully");
-          console.log(response);
+          router.push("/chat");
         } else {
           console.error("Registration failed");
         }

@@ -6,6 +6,7 @@ import PasswordInput from "./PasswordInput";
 import PrimaryButton from "../public/PrimaryButton";
 import Link from "next/link";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 type RegisterForm = {
   email: string;
@@ -18,6 +19,7 @@ const defaultForm = {
 };
 
 export default function LoginForm() {
+  const router = useRouter();
   const [form, setForm] = useState<RegisterForm>(structuredClone(defaultForm));
   const [errors, setErrors] = useState<RegisterForm>(
     structuredClone(defaultForm)
@@ -58,7 +60,27 @@ export default function LoginForm() {
     if (haveErrors) {
       setErrors(validationErrors);
     } else {
-      // TODO: Backend for login the user
+      // Called Login API
+      try {
+        setPrimaryLoading(true);
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+        if (response.ok) {
+          console.log("User logged in successfully");
+          router.push("/chat");
+        } else {
+          console.error("Login failed");
+        }
+      } catch (error) {
+        console.error("Error login user:", error);
+      } finally {
+        setPrimaryLoading(false);
+      }
     }
   };
 
