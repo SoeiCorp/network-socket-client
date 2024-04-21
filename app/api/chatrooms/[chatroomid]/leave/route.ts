@@ -14,7 +14,6 @@ export async function DELETE(req: NextRequest, { params }: any) {
             }, { status: 400 })
         }
         const deletedUser: ChatroomUser[] = await db.delete(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid))).returning();
-        console.log(deletedUser)
         return NextResponse.json({
             success: true,
             message: 'Successfully leave the chatroom',
