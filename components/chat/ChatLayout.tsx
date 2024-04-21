@@ -10,6 +10,7 @@ import CreateNewGroupButton from "@/components/chat/ChatList/CreateNewGroupButto
 import Profile from "@/components/chat/ChatList/Profile";
 import { ChatroomResult, UserResult } from "@/app/chat/layout";
 import { AppWrapper } from "@/context";
+import { connect, joinGroupChatroom, leaveGroupChatroom, sendGroupMessage, sendPrivateMessage } from "../socket/client";
 
 interface ChatLayoutProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ export default function ChatLayout({
 }: ChatLayoutProps) {
   // Switch between private and group chatrooms list
   const [isPrivateChat, setPrivateChat] = useState(true);
-
+  connect()
   return (
     <AppWrapper>
       <div className="min-w-[430px] w-[30vw] h-full overflow-y-auto pl-4 flex flex-col">
@@ -51,7 +52,7 @@ export default function ChatLayout({
             className={`w-1/2 h-full flex items-center justify-center rounded-md ${
               isPrivateChat ? "bg-slate-200" : "bg-white"
             }`}
-            onClick={() => setPrivateChat(false)}
+            onClick={() => sendPrivateMessage(2, "yoooooooooo")}
           >
             <Image
               src={"/icons/humans.svg"}
@@ -60,7 +61,52 @@ export default function ChatLayout({
               alt="plus"
               className="mr-[10px]"
             />
-            <p className="text-sm">แชทกลุ่ม</p>
+            <p className="text-sm">ทดสอบแชทเดี่ยว</p>
+          </button>
+          <button
+            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+              isPrivateChat ? "bg-slate-200" : "bg-white"
+            }`}
+            onClick={() => sendGroupMessage(11, "test ja")}
+          >
+            <Image
+              src={"/icons/humans.svg"}
+              width={23}
+              height={23}
+              alt="plus"
+              className="mr-[10px]"
+            />
+            <p className="text-sm">ทดสอบแชทกลุ่ม</p>
+          </button>
+          <button
+            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+              isPrivateChat ? "bg-slate-200" : "bg-white"
+            }`}
+            onClick={() => joinGroupChatroom(11)}
+          >
+            <Image
+              src={"/icons/humans.svg"}
+              width={23}
+              height={23}
+              alt="plus"
+              className="mr-[10px]"
+            />
+            <p className="text-sm">ทดสอบเข้าแชท</p>
+          </button>
+          <button
+            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+              isPrivateChat ? "bg-slate-200" : "bg-white"
+            }`}
+            onClick={() => leaveGroupChatroom(11)}
+          >
+            <Image
+              src={"/icons/humans.svg"}
+              width={23}
+              height={23}
+              alt="plus"
+              className="mr-[10px]"
+            />
+            <p className="text-sm">ทดสอบออกแชท</p>
           </button>
         </div>
 
