@@ -1,15 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import noavatar from "@/public/icons/noavatar.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import Avatar from "./Avatar";
-import { UserResult } from "@/app/chat/layout";
+import { ChatroomResult, UserResult } from "@/app/chat/layout";
 
 type Props = {
-  chatroom: UserResult;
+  chatroom: ChatroomResult;
 };
 
 export default function ChatCard({ chatroom }: Props) {

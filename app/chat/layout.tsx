@@ -67,13 +67,13 @@ export default async function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>): Promise<React.ReactNode> {
-  const chatroomsData = await getAllChatrooms();
-  const usersData = await getAllUsers();
+  const allChatrooms = await getAllChatrooms();
+  const allUsers = await getAllUsers();
   return (
     <div className="flex gap-4 h-full bg-white">
       <ChatLayout
-        usersData={usersData}
-        groupChatrooms={chatroomsData.groupChatrooms}
+        allUsers={allUsers}
+        allGroups={allChatrooms.groupChatrooms}
       >
         {children}
       </ChatLayout>

@@ -12,10 +12,10 @@ import toast from "react-hot-toast";
 import { revalidateChatrooms } from "@/lib/actions";
 
 interface Props {
-  groupChatrooms: ChatroomResult[];
+  allGroups: ChatroomResult[];
 }
 
-export default function GroupChatCardList({ groupChatrooms }: Props) {
+export default function GroupChatCardList({ allGroups }: Props) {
   const [joinedChatrooms, setJoinedChatrooms] = useState<ChatroomResult[]>([]);
   const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<
     ChatroomResult[]
@@ -36,7 +36,7 @@ export default function GroupChatCardList({ groupChatrooms }: Props) {
           console.log("Get all group chatrooms of user sucess");
           const res = await response.json();
           const joined = res.data;
-          const notJoined = getUnjoinedChatrooms(groupChatrooms, joined);
+          const notJoined = getUnjoinedChatrooms(allGroups, joined);
           setJoinedChatrooms(joined);
           setNotJoinedChatrooms(notJoined);
         } else {
@@ -47,7 +47,7 @@ export default function GroupChatCardList({ groupChatrooms }: Props) {
       }
     };
     fetchChatGroupData();
-  }, [groupChatrooms]);
+  }, [allGroups]);
 
   const handleJoinChat = async (chatroomId: number) => {
     try {

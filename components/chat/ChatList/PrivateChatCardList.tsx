@@ -8,15 +8,15 @@ import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import { User } from "@/drizzle/schemas/users";
 import { useAppContext } from "@/context";
 import { ChatroomResult, UserResult } from "@/app/chat/layout";
+import PrivateChatCard from "./PrivateChatCard";
 
 interface Props {
-  usersData: UserResult[];
+  allUsers: UserResult[];
 }
 
-export default function PrivateChatCardList({ usersData }: Props) {
-  const [onlineChatrooms, setOnlineChatrooms] = useState<UserResult[]>([]);
-  const [offlineChatrooms, setofflineChatrooms] =
-    useState<UserResult[]>(usersData); // For now
+export default function PrivateChatCardList({ allUsers }: Props) {
+  const [onlineUsers, setOnlineUsers] = useState<UserResult[]>([]);
+  const [offlineUsers, setofflineUsers] = useState<UserResult[]>(allUsers); // For now
   const [loading, setLoading] = useState<boolean>(false);
   const { context, setTrigger } = useAppContext();
   const name = context.name;
@@ -35,16 +35,14 @@ export default function PrivateChatCardList({ usersData }: Props) {
         Array.from({ length: 12 }).map((_, index) => (
           <ChatCardLoading key={index} />
         ))
-      ) : onlineChatrooms.length || offlineChatrooms.length ? (
+      ) : onlineUsers.length || offlineUsers.length ? (
         <div>
           {/* joined */}
           <div className="text-slate-500 flex flex-col gap-2 mt-[10px]">
-            <div className="ml-[8px]">
-              ออนไลน์ {`(${onlineChatrooms.length})`}
-            </div>
+            <div className="ml-[8px]">ออนไลน์ {`(${onlineUsers.length})`}</div>
 
-            {onlineChatrooms.map((chatroom, index) => (
-              <ChatCard key={index} chatroom={chatroom} />
+            {onlineUsers.map((user, index) => (
+              <PrivateChatCard key={index} user={user} />
             ))}
             <div className="w-full flex justify-center mt-[5px]">
               <hr className="text-slate-500 w-[95%]" />
@@ -53,14 +51,9 @@ export default function PrivateChatCardList({ usersData }: Props) {
 
           {/* บ่ joined */}
           <div className="text-slate-500 mt-[25px] flex flex-col gap-2">
-            <div className="ml-[8px]">
-              ออฟไลน์ {`(${offlineChatrooms.length})`}
-            </div>
-            {offlineChatrooms.map((chatroom, index) => (
-              <ChatCard
-                key={index + onlineChatrooms.length}
-                chatroom={chatroom}
-              />
+            <div className="ml-[8px]">ออฟไลน์ {`(${offlineUsers.length})`}</div>
+            {offlineUsers.map((user, index) => (
+              <PrivateChatCard key={index + onlineUsers.length} user={user} />
             ))}
           </div>
         </div>

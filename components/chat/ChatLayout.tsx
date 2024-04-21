@@ -13,14 +13,14 @@ import { AppWrapper } from "@/context";
 
 interface ChatLayoutProps {
   children: React.ReactNode;
-  usersData: UserResult[];
-  groupChatrooms: ChatroomResult[];
+  allUsers: UserResult[];
+  allGroups: ChatroomResult[];
 }
 
 export default function ChatLayout({
   children,
-  usersData,
-  groupChatrooms,
+  allUsers,
+  allGroups,
 }: ChatLayoutProps) {
   // Switch between private and group chatrooms list
   const [isPrivateChat, setPrivateChat] = useState(true);
@@ -70,11 +70,11 @@ export default function ChatLayout({
         {/* ChatCardList base on isGroupChat */}
         {isPrivateChat ? (
           <div className="overflow-y-auto mt-[10px] h-[75%]">
-            <PrivateChatCardList usersData={usersData} />
+            <PrivateChatCardList allUsers={allUsers} />
           </div>
         ) : (
           <div className="overflow-y-auto mt-[10px] h-[70%]">
-            <GroupChatCardList groupChatrooms={groupChatrooms} />
+            <GroupChatCardList allGroups={allGroups} />
           </div>
         )}
 

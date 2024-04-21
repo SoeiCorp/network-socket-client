@@ -1,10 +1,10 @@
 "use client";
 import ChatMessageListByDate from "./ChatMessageListByDate";
 import { useRef, useEffect, useState } from "react";
+import { useAppContext } from "@/context";
 
 type Props = {
   chatroomId: number;
-  senderId: number;
   isGroupChat: boolean;
 };
 
@@ -18,7 +18,6 @@ export type ChatMessageWithName = {
   content: string;
 };
 
-// ChatMessage need to have "name" of the sender too
 export interface MessagesGroupByDate {
   Date: string;
   Messages: ChatMessageWithName[];
@@ -111,14 +110,30 @@ const messages: MessagesGroupByDate[] = [
   },
 ];
 
-export default function ChatMessageList({
-  chatroomId,
-  senderId,
-  isGroupChat,
-}: Props) {
+export default function ChatMessageList({ chatroomId, isGroupChat }: Props) {
   const [messagesByDate, setMessagesByDate] =
     useState<MessagesGroupByDate[]>(messages);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {context, setContext} = useAppContext();
+  const userId = context.userId;
+
+  useEffect(() => {
+    const fetchChatMessages = async (chatroomId: number, userId: number) => {
+      try {
+        const response = await fetch(`/api/chatrooms/${chatroomId}/messages`);
+        if (response.ok) {
+          console.log("Successfully fetched chat messages");
+          const res = await response.json();
+          console.log(res.data);
+        } else {
+          throw new Error("Failed to fetch chat messages");
+        }
+      } catch (error) {
+        console.error("Error fetching chat messages:", error);
+      }
+    };
+    fetchChatMessages(chatroomId, userId);
+  }, [chatroomId, userId]);
 
   // TODO : fetch chatmessage of chatroomId (need sender name too)
 
@@ -166,7 +181,7 @@ export default function ChatMessageList({
                 <ChatMessageListByDate
                   key={index}
                   messageByDate={messageByDate}
-                  senderId={senderId}
+                  senderId={userId}
                   isGroupChat={isGroupChat}
                 />
               ))}
