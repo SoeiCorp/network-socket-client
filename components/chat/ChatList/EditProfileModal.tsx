@@ -56,7 +56,7 @@ export default function EditProfileModal({
       toggleEditProfile();
     }
   };
-  console.log(name);
+
   return (
     showEditProfile && (
       <div
