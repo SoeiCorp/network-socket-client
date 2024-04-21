@@ -8,18 +8,18 @@ import Logo from "@/components/auth/Logo";
 import Image from "next/image";
 import CreateNewGroupButton from "@/components/chat/ChatList/CreateNewGroupButton";
 import Profile from "@/components/chat/ChatList/Profile";
-import { ChatroomResult } from "@/app/chat/layout";
+import { ChatroomResult, UserResult } from "@/app/chat/layout";
 import { AppWrapper } from "@/context";
 
 interface ChatLayoutProps {
   children: React.ReactNode;
-  privateChatrooms: ChatroomResult[];
+  usersData: UserResult[];
   groupChatrooms: ChatroomResult[];
 }
 
 export default function ChatLayout({
   children,
-  privateChatrooms,
+  usersData,
   groupChatrooms,
 }: ChatLayoutProps) {
   // Switch between private and group chatrooms list
@@ -70,7 +70,7 @@ export default function ChatLayout({
         {/* ChatCardList base on isGroupChat */}
         {isPrivateChat ? (
           <div className="overflow-y-auto mt-[10px] h-[75%]">
-            <PrivateChatCardList privateChatrooms={privateChatrooms} />
+            <PrivateChatCardList usersData={usersData} />
           </div>
         ) : (
           <div className="overflow-y-auto mt-[10px] h-[70%]">

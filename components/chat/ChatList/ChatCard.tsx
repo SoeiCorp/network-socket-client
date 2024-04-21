@@ -6,9 +6,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import Avatar from "./Avatar";
+import { UserResult } from "@/app/chat/layout";
 
 type Props = {
-  chatroom: Chatroom;
+  chatroom: UserResult;
 };
 
 export default function ChatCard({ chatroom }: Props) {
@@ -17,8 +18,9 @@ export default function ChatCard({ chatroom }: Props) {
 
   return (
     <Link
-      className={`${isChatRoom ? "bg-slate-200" : "hover:bg-slate-100"
-        } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3`}
+      className={`${
+        isChatRoom ? "bg-slate-200" : "hover:bg-slate-100"
+      } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3`}
       href={`/chat/${String(chatroom.id)}`}
     >
       <Avatar name={chatroom.name || ""} userId={chatroom.id} />

@@ -7,99 +7,20 @@ import SearchNotFound from "./SearchNotFound";
 import { Chatroom } from "@/drizzle/schemas/chatrooms";
 import { User } from "@/drizzle/schemas/users";
 import { useAppContext } from "@/context";
-import { ChatroomResult } from "@/app/chat/layout";
+import { ChatroomResult, UserResult } from "@/app/chat/layout";
 
 interface Props {
-  privateChatrooms: ChatroomResult[];
+  usersData: UserResult[];
 }
 
-export default function PrivateChatCardList({ privateChatrooms }: Props) {
-  const [chatrooms, setChatrooms] = useState<Chatroom[]>([]);
-  const [onlineChatrooms, setOnlineChatrooms] = useState<Chatroom[]>([]);
-  const [offlineChatrooms, setofflineChatrooms] = useState<Chatroom[]>([]);
+export default function PrivateChatCardList({ usersData }: Props) {
+  const [onlineChatrooms, setOnlineChatrooms] = useState<UserResult[]>([]);
+  const [offlineChatrooms, setofflineChatrooms] =
+    useState<UserResult[]>(usersData); // For now
   const [loading, setLoading] = useState<boolean>(false);
   const { context, setTrigger } = useAppContext();
   const name = context.name;
   const userId = context.userId;
-
-  // TODO : Fetch all private chatrooms from db
-  useEffect(() => {
-    // TEMPORARY
-    const chatroomsData: Chatroom[] = [
-      {
-        id: 1,
-        name: "Somchai",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 2,
-        name: "Somying",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 3,
-        name: "Somying1",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 4,
-        name: "Somying2",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 5,
-        name: "Somying3",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 6,
-        name: "Somying4",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 11,
-        name: "Somying5",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 7,
-        name: "Somying6",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 8,
-        name: "Somying7",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 9,
-        name: "Somying8",
-        type: "private",
-        createdAt: new Date(),
-      },
-      {
-        id: 10,
-        name: "Somying9",
-        type: "private",
-        createdAt: new Date(),
-      },
-    ];
-    setOnlineChatrooms(
-      chatroomsData.filter((chatroom) => chatroom.id % 2 == 1)
-    );
-    setofflineChatrooms(
-      chatroomsData.filter((chatroom) => chatroom.id % 2 == 0)
-    );
-  }, []);
 
   // TODO : Online chatroom message handler
   // function showOnlineChatroom(message){
@@ -114,7 +35,7 @@ export default function PrivateChatCardList({ privateChatrooms }: Props) {
         Array.from({ length: 12 }).map((_, index) => (
           <ChatCardLoading key={index} />
         ))
-      ) : onlineChatrooms.length && offlineChatrooms.length ? (
+      ) : onlineChatrooms.length || offlineChatrooms.length ? (
         <div>
           {/* joined */}
           <div className="text-slate-500 flex flex-col gap-2 mt-[10px]">
