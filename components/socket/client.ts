@@ -4,14 +4,9 @@ import { Socket, io } from 'socket.io-client'
 // const socketServerURL = 'https://soei-socket-server.vercel.app/'
 const socketServerURL = 'http://localhost:3001/'
 
-let curChatroomId: number;
 let socket: Socket;
 
-export async function connect(chatroomId: number, senderId: number) {
-    if (chatroomId === curChatroomId) return;
-    // if (socket) {
-    //     socket.disconnect();
-    // }
+export async function connect() {
     const res = await fetch('/api/auth/me');
     const response = await res.json();
     const { id } = response.data;
@@ -31,9 +26,6 @@ export async function connect(chatroomId: number, senderId: number) {
     socket.on('private message sent', (recipientId, message) => {
         console.log('Private message sent to:', recipientId, message)
     })
-    // console.log("data", data)
-
-    curChatroomId = chatroomId
 }
 
 export function sendPrivateMessage(recipientId: Number, message: string) {

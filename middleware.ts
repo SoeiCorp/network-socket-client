@@ -55,5 +55,6 @@ export const config = {
     "/api/chatrooms/group",
     "/api/chatrooms/:chatroomid/messages",
     "/api/chatrooms/:chatroomid/join",
+    "/api/chatrooms/:chatroomid/leave",
   ],
 };
