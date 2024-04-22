@@ -14,7 +14,12 @@ export async function GET(req: NextRequest) {
   try {
     const userId = req.headers.get("userId");
     const result = await db.execute(sql`
-            SELECT c.*, count(*) 
+            SELECT 
+              c.id AS id, 
+              c.name AS name, 
+              c.chatroom_type AS type,
+              c.created_at AS "createdAt",
+              count(*) AS "numUsers" 
             FROM chatrooms c 
             LEFT JOIN chatroom_users cu 
             ON cu.chatroom_id = c.id 
@@ -24,11 +29,17 @@ export async function GET(req: NextRequest) {
                 WHERE user_id = ${userId}) 
             AND chatroom_type='group'
             GROUP BY c.id`);
+    const modifiedResult = result.rows.map(item => {
+      const modifiedItem = { ...item }
+      modifiedItem.createdAt = new Date(modifiedItem.createdAt as string);
+      modifiedItem.numUsers = parseInt(modifiedItem.numUsers as string)
+      return modifiedItem
+    })
     return NextResponse.json(
       {
         success: true,
         message: "Successfully get all group chatrooms of user",
-        data: result.rows,
+        data: modifiedResult,
       },
       { status: 200 }
     );
