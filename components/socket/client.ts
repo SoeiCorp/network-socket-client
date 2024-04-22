@@ -5,6 +5,16 @@ import { ChatMessage } from '@/drizzle/schemas/chatMessages';
 // const socketServerURL = 'https://soei-socket-server.vercel.app/'
 const socketServerURL = 'http://localhost:3001/'
 
+type toClientMessage = {
+    id: number
+    chatroomId: number
+    userId: number
+    content: string
+    type: "text" | "image"
+    createdAt: string
+    userName: string
+}
+
 let socket: Socket;
 
 export async function connect() {
@@ -20,16 +30,16 @@ export async function connect() {
     socket.on('users online', (data: [userId: string]) => {
         console.log('users online', data)
     })
-    socket.on('private message', (senderId: string, chatMessage: ChatMessage) => {
+    socket.on('private message', (senderId: string, chatMessage: toClientMessage) => {
         console.log('Private message sent from:', senderId, chatMessage)
     })
-    socket.on('private message sent', (recipientId: string, chatMessage: ChatMessage) => {
+    socket.on('private message sent', (recipientId: string, chatMessage: toClientMessage) => {
         console.log('Private message sent to:', recipientId, chatMessage)
     })
-    socket.on('group message', (chatroomId: string, chatMessage: ChatMessage, senderId: string) => {
+    socket.on('group message', (chatroomId: string, chatMessage: toClientMessage, senderId: string) => {
         console.log('Group message sent from:', senderId, 'in', chatroomId, chatMessage)
     })
-    socket.on('group message sent', (chatroomId: string, chatMessage: ChatMessage, recipientId: string) => {
+    socket.on('group message sent', (chatroomId: string, chatMessage: toClientMessage, recipientId: string) => {
         console.log('Group message sent to:', recipientId, 'in', chatroomId, chatMessage)
     })
     socket.on('join group', (chatroomId: string, joinUserId: string) => {
