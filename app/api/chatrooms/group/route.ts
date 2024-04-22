@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
                 SELECT chatroom_id 
                 FROM chatroom_users 
                 WHERE user_id = ${userId}) 
+            AND chatroom_type='group'
             GROUP BY c.id`);
     return NextResponse.json(
       {
