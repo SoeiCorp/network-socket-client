@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Avatar from "./Avatar";
 import { useAppContext } from "@/context";
+import { disconnectFromSocket } from "@/components/socket/client";
 
 export default function Profile() {
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function Profile() {
       if (response.ok) {
         console.log("User logged out successfully");
         toast.success("ออกจากระบบสำเร็จ");
+        disconnectFromSocket();
         router.push("/login");
       } else {
         console.error("Logout failed");

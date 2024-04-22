@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { revalidateChatrooms } from "@/lib/actions";
+import { createGroupChatroom } from "@/components/socket/client";
 
 export default function CreateNewGroup({
   showCreateNewGroup,
@@ -39,6 +40,8 @@ export default function CreateNewGroup({
       });
       if (response.ok) {
         console.log("Create group chatroom successfully");
+        const res = await response.json();
+        createGroupChatroom(res.data.id);
         await revalidateChatrooms();
         toast.success("สร้างกลุ่มสำเร็จ");
       } else {
@@ -53,7 +56,6 @@ export default function CreateNewGroup({
       setDisabled(false);
       toggleCreateNewGroup();
     }
-    // redirect กลับมาหน้าโปรไฟล์แบบ rerender page ใหม่
   };
   return (
     showCreateNewGroup && (

@@ -11,7 +11,7 @@ import { ChatroomResult } from "@/app/chat/layout";
 
 type Props = {
   chatroom: ChatroomResult;
-  handleLeaveChat: (chatroomId: number, userId: number) => void;
+  handleLeaveChat: (chatroomId: number) => void;
 };
 
 export default function JoinedGroupChatCard({
@@ -24,10 +24,11 @@ export default function JoinedGroupChatCard({
   const leaveChatIdRef = useRef(0);
 
   const [showConfirmLeaveChat, setShowConfirmLeaveChat] = useState(false);
-
   const toggleConfirmLeaveChat = () => {
     setShowConfirmLeaveChat(!showConfirmLeaveChat);
   };
+
+  // console.log("join", chatroom);
 
   return (
     <Link
@@ -39,9 +40,12 @@ export default function JoinedGroupChatCard({
       <div className="flex items-center gap-2">
         <Avatar name={chatroom.name || ""} userId={chatroom.id} />
         <div className="flex flex-col w-full gap-1 ml-[10px]">
-          <div className="flex flex-row justify-between w-full items-center lg:text-[18px]">
+          <div className="flex flex-row justify-between w-full items-center lg:text-[18px] gap-2">
             <div className="font-medium text-[16px] text-slate-800 truncate max-w-[24ch] lg:max-w-[27ch]">
               {chatroom.name}
+            </div>
+            <div className="font-medium text-[12px] text-slate-500 truncate max-w-[24ch] lg:max-w-[27ch]">
+              ( {chatroom.numUsers} )
             </div>
           </div>
         </div>

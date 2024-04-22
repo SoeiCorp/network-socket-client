@@ -10,6 +10,9 @@ import CreateNewGroupButton from "@/components/chat/ChatList/CreateNewGroupButto
 import Profile from "@/components/chat/ChatList/Profile";
 import { ChatroomResult, UserResult } from "@/app/chat/layout";
 import { AppWrapper } from "@/context";
+import { connect } from "../socket/client";
+import { socket } from "../socket/client";
+import { revalidateUsers } from "@/lib/actions";
 
 interface ChatLayoutProps {
   children: React.ReactNode;
@@ -24,6 +27,16 @@ export default function ChatLayout({
 }: ChatLayoutProps) {
   // Switch between private and group chatrooms list
   const [isPrivateChat, setPrivateChat] = useState(true);
+  const [onlineIds, setOnlineIds] = useState<string[]>([]);
+
+  // Connect to WS
+  useEffect(() => {
+    connect();
+    socket.on("users online", async (data: string[]) => {
+      await revalidateUsers();
+      setOnlineIds(data);
+    });
+  }, []);
 
   return (
     <AppWrapper>
@@ -70,7 +83,7 @@ export default function ChatLayout({
         {/* ChatCardList base on isGroupChat */}
         {isPrivateChat ? (
           <div className="overflow-y-auto mt-[10px] h-[75%]">
-            <PrivateChatCardList allUsers={allUsers} />
+            <PrivateChatCardList allUsers={allUsers} onlineIds={onlineIds} />
           </div>
         ) : (
           <div className="overflow-y-auto mt-[10px] h-[70%]">

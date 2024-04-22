@@ -11,7 +11,10 @@ type Props = {
 export default function ChatRoom({ chatroomId, isGroupChat }: Props) {
   return (
     <div className="h-full w-full flex flex-col bg-neutral-100 border border-[#CBD5E1]">
-      <ChatMessageList chatroomId={chatroomId} isGroupChat={isGroupChat} />
+      <ChatMessageList
+        currentChatroomId={chatroomId}
+        isGroupChat={isGroupChat}
+      />
       <ChatInput chatroomId={chatroomId} />
     </div>
   );

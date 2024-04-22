@@ -49,6 +49,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/chat",
     "/chat/:path*",
     "/api/auth/update",
     "/api/chatrooms",

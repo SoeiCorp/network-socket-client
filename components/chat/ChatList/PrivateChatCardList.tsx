@@ -9,24 +9,22 @@ import { User } from "@/drizzle/schemas/users";
 import { useAppContext } from "@/context";
 import { ChatroomResult, UserResult } from "@/app/chat/layout";
 import PrivateChatCard from "./PrivateChatCard";
+import { socket } from "@/components/socket/client";
 
 interface Props {
   allUsers: UserResult[];
+  onlineIds: String[];
 }
 
-export default function PrivateChatCardList({ allUsers }: Props) {
-  const [onlineUsers, setOnlineUsers] = useState<UserResult[]>([]);
-  const [offlineUsers, setofflineUsers] = useState<UserResult[]>(allUsers); // For now
+export default function PrivateChatCardList({ allUsers, onlineIds }: Props) {
+  const onlineUsers = allUsers.filter((user) =>
+    onlineIds.includes(user.id.toString())
+  );
+  const offlineUsers = allUsers.filter(
+    (user) => !onlineIds.includes(user.id.toString())
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const { context, setTrigger } = useAppContext();
-  const name = context.name;
-  const userId = context.userId;
-
-  // TODO : Online chatroom message handler
-  // function showOnlineChatroom(message){
-  //   // setOnlineChatroom(message);
-  //   // setOflineChatroom(chatrooms - onlineChatroom);
-  // }
 
   return (
     <div className="flex flex-col gap-2">
@@ -40,10 +38,18 @@ export default function PrivateChatCardList({ allUsers }: Props) {
           {/* joined */}
           <div className="text-slate-500 flex flex-col gap-2 mt-[10px]">
             <div className="ml-[8px]">ออนไลน์ {`(${onlineUsers.length})`}</div>
-
-            {onlineUsers.map((user, index) => (
-              <PrivateChatCard key={index} user={user} />
-            ))}
+            <PrivateChatCard
+              user={{
+                id: context.userId,
+                name: context.name,
+              }}
+            />
+            {onlineUsers.map(
+              (user, index) =>
+                user.id !== context.userId && (
+                  <PrivateChatCard key={index} user={user} />
+                )
+            )}
             <div className="w-full flex justify-center mt-[5px]">
               <hr className="text-slate-500 w-[95%]" />
             </div>

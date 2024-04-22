@@ -115,7 +115,7 @@ export default function LoginForm() {
       />
       <PrimaryButton
         type="submit"
-        isDisabled={isDisabled}
+        isDisabled={primaryLoading}
         className="w-full mt-8 text-base"
         isLoading={primaryLoading}
         loadingMessage="กำลังดำเนินการ"

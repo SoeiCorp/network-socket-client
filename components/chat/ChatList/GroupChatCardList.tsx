@@ -10,6 +10,10 @@ import { useAppContext } from "@/context";
 import { ChatroomResult } from "@/app/chat/layout";
 import toast from "react-hot-toast";
 import { revalidateChatrooms } from "@/lib/actions";
+import {
+  joinGroupChatroom,
+  leaveGroupChatroom,
+} from "@/components/socket/client";
 
 interface Props {
   allGroups: ChatroomResult[];
@@ -29,6 +33,7 @@ export default function GroupChatCardList({ allGroups }: Props) {
   useEffect(() => {
     const fetchChatGroupData = async () => {
       try {
+        setLoading(true);
         const response = await fetch("/api/chatrooms/group", {
           method: "GET",
         });
@@ -44,6 +49,8 @@ export default function GroupChatCardList({ allGroups }: Props) {
         }
       } catch (error) {
         console.error("Error get all group chatrooms of user:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchChatGroupData();
@@ -61,8 +68,9 @@ export default function GroupChatCardList({ allGroups }: Props) {
       });
       if (response.ok) {
         console.log("Join group successfully");
-        await revalidateChatrooms();
         toast.success("เข้าร่วมกลุ่มสำเร็จ");
+        joinGroupChatroom(chatroomId);
+        await revalidateChatrooms();
       } else {
         console.error("Join group fail");
         toast.error("เข้าร่วมกลุ่มไม่สำเร็จ");
@@ -76,28 +84,30 @@ export default function GroupChatCardList({ allGroups }: Props) {
   };
 
   const handleLeaveChat = async (chatroomId: number) => {
-    // try {
-    //   setLoading(true);
-    //   const response = await fetch(`/api/chatrooms/${chatroomId}/join`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ chatroomid: chatroomId }),
-    //   });
-    //   if (response.ok) {
-    //     console.log("Join group successfully");
-    //     toast.success("เข้าร่วมกลุ่มสำเร็จ");
-    //   } else {
-    //     console.error("Join group fail");
-    //     toast.error("เข้าร่วมกลุ่มไม่สำเร็จ");
-    //   }
-    // } catch (error) {
-    //   console.error("Error join group:", error);
-    //   toast.error("System error");
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      // setLoading(true);
+      const response = await fetch(`/api/chatrooms/${chatroomId}/leave`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatroomid: chatroomId }),
+      });
+      if (response.ok) {
+        console.log("Leave group successfully");
+        leaveGroupChatroom(chatroomId);
+        toast.success("ออกกลุ่มสำเร็จ");
+        await revalidateChatrooms();
+      } else {
+        console.error("Leave group fail");
+        toast.error("ออกกลุ่มไม่สำเร็จ");
+      }
+    } catch (error) {
+      console.error("Error leave group:", error);
+      toast.error("System error");
+    } finally {
+      // setLoading(false);
+    }
   };
 
   return (
@@ -106,7 +116,7 @@ export default function GroupChatCardList({ allGroups }: Props) {
         Array.from({ length: 12 }).map((_, index) => (
           <ChatCardLoading key={index} />
         ))
-      ) : joinedChatrooms.length && notJoinedChatrooms.length ? (
+      ) : joinedChatrooms.length || notJoinedChatrooms.length ? (
         <div>
           {/* joined */}
           <div className="text-slate-500 flex flex-col gap-2 mt-[10px]">

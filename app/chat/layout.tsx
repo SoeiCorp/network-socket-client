@@ -25,6 +25,7 @@ async function getAllChatrooms() {
     });
     if (response.ok) {
       console.log("Get all chatrooms success");
+      console.log("fetching...");
       const res = await response.json();
       res.data.forEach((chatroom: ChatroomResult) => {
         if (chatroom.type === "private") {
@@ -71,10 +72,7 @@ export default async function Layout({
   const allUsers = await getAllUsers();
   return (
     <div className="flex gap-4 h-full bg-white">
-      <ChatLayout
-        allUsers={allUsers}
-        allGroups={allChatrooms.groupChatrooms}
-      >
+      <ChatLayout allUsers={allUsers} allGroups={allChatrooms.groupChatrooms}>
         {children}
       </ChatLayout>
     </div>
