@@ -13,7 +13,10 @@ import { revalidateChatrooms } from "@/lib/actions";
 
 const socketServerURL = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL || '';
 
-export let socket: Socket = io(socketServerURL);
+export let socket: Socket = io(socketServerURL, {
+    withCredentials: true,
+    transports: ['websocket', 'polling', 'flashsocket']
+});
 
 export async function connect() {
     const res = await fetch("/api/auth/me");
@@ -26,11 +29,11 @@ export async function connect() {
     //   console.log("Disconnect to socket");
     // }
 
-    socket = io(socketServerURL, {
-        extraHeaders: {
-            "user-id": id,
-        },
-    });
+    // socket = io(socketServerURL, {
+    //     extraHeaders: {
+    //         "user-id": id,
+    //     },
+    // });
     console.log("Connect to socket");
 
     socket.emit("login", id);
