@@ -2,9 +2,10 @@
 import ChatMessageListByDate from "./ChatMessageListByDate";
 import { useRef, useEffect, useState } from "react";
 import { useAppContext } from "@/context";
+import { socket } from "@/components/socket/client";
 
 type Props = {
-  chatroomId: number;
+  currentChatroomId: number;
   isGroupChat: boolean;
 };
 
@@ -23,7 +24,10 @@ export interface MessagesGroupByDate {
   Messages: ChatMessageWithName[];
 }
 
-export default function ChatMessageList({ chatroomId, isGroupChat }: Props) {
+export default function ChatMessageList({
+  currentChatroomId,
+  isGroupChat,
+}: Props) {
   const [messagesByDate, setMessagesByDate] = useState<MessagesGroupByDate[]>(
     []
   );
@@ -32,14 +36,21 @@ export default function ChatMessageList({ chatroomId, isGroupChat }: Props) {
   const userId = context.userId;
 
   useEffect(() => {
-    const fetchChatMessages = async (chatroomId: number, userId: number) => {
+    const fetchChatMessages = async (
+      currentChatroomId: number,
+      userId: number
+    ) => {
       try {
-        const response = await fetch(`/api/chatrooms/${chatroomId}/messages`);
+        const response = await fetch(
+          `/api/chatrooms/${currentChatroomId}/messages`
+        );
         if (response.ok) {
           console.log("Successfully fetched chat messages");
           const res = await response.json();
           setMessagesByDate(transformData(res.data));
-          console.log(transformData(res.data));
+          // console.log(transformData(res.data));
+          // console.log("createdAt DB", res.data[0]);
+          // console.log(new Date(res.data[0].createdAt));
         } else {
           throw new Error("Failed to fetch chat messages");
         }
@@ -47,10 +58,58 @@ export default function ChatMessageList({ chatroomId, isGroupChat }: Props) {
         console.error("Error fetching chat messages:", error);
       }
     };
-    fetchChatMessages(chatroomId, userId);
-  }, [chatroomId, userId]);
+    fetchChatMessages(currentChatroomId, userId);
+  }, [currentChatroomId, userId]);
 
-  // TODO : fetch chatmessage of chatroomId (need sender name too)
+  useEffect(() => {
+    console.log("set socket.on of group message: ", currentChatroomId);
+    socket.on(
+      "group message",
+      (
+        chatroomId: string,
+        chatMessage: ChatMessageWithName,
+        senderId: string
+      ) => {
+        console.log("Receieve message from socket.");
+        console.log(chatMessage);
+        console.log(new Date(chatMessage.createdAt));
+        if (currentChatroomId.toString() === chatroomId) {
+          setMessagesByDate((messagesByDate) => {
+            const latestMessageByDate =
+              messagesByDate.length !== 0
+                ? messagesByDate[messagesByDate.length - 1]
+                : undefined;
+            if (
+              !latestMessageByDate ||
+              latestMessageByDate.Date !==
+                new Date(
+                  new Date(chatMessage.createdAt).toLocaleString()
+                ).toDateString()
+            ) {
+              const newMessageByDate: MessagesGroupByDate = {
+                Date: new Date(
+                  new Date(chatMessage.createdAt).toLocaleString()
+                ).toDateString(),
+                Messages: [
+                  {
+                    ...chatMessage,
+                    createdAt: new Date(chatMessage.createdAt),
+                  },
+                ],
+              };
+              return [...messagesByDate, newMessageByDate];
+            }
+            messagesByDate[messagesByDate.length - 1].Messages.push({
+              ...chatMessage,
+              createdAt: new Date(chatMessage.createdAt),
+            });
+            console.log(messagesByDate);
+            return [...messagesByDate];
+          });
+        }
+      }
+    );
+  }, []);
 
   const bottomOfPanelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -112,11 +171,15 @@ export default function ChatMessageList({ chatroomId, isGroupChat }: Props) {
   );
 }
 
-function transformData(data: ChatMessageWithName[]): MessagesGroupByDate[] {
+export function transformData(
+  data: ChatMessageWithName[]
+): MessagesGroupByDate[] {
   const formattedData: MessagesGroupByDate[] = [];
 
   data.forEach((message) => {
-    const dateKey = new Date(message.createdAt).toDateString();
+    const dateKey = new Date(
+      new Date(message.createdAt).toLocaleString()
+    ).toDateString();
     const existingDate = formattedData.find((item) => item.Date === dateKey);
 
     const formattedMessage: ChatMessageWithName = {

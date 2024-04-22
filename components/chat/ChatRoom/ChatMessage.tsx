@@ -14,8 +14,8 @@ type Props = {
 export default function ChatMessage({ message, senderId, isGroupChat }: Props) {
   const { id, userId, createdAt, content, type } = message;
   const isSender = senderId === userId;
-  const hours = createdAt.getHours().toString().padStart(2, "0");
-  const minutes = createdAt.getMinutes().toString().padStart(2, "0");
+  const hours = new Date(createdAt).getHours().toString().padStart(2, "0");
+  const minutes = new Date(createdAt).getMinutes().toString().padStart(2, "0");
   const time = `${hours}:${minutes}`;
 
   const [isFullscreen, setIsFullscreen] = useState(false);

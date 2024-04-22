@@ -101,6 +101,8 @@ export default function RegisterForm() {
       } catch (error) {
         console.error("Error registering user:", error);
         toast.error("System error");
+      } finally {
+        setPrimaryLoading(false);
       }
     }
   };

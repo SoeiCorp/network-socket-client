@@ -14,8 +14,6 @@ export type UserResult = {
   name: string;
 };
 
-const revalidate = 60; // auto revalidate every minute
-
 // When other create new chatroom, tell every connector by ws
 async function getAllChatrooms() {
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
@@ -27,6 +25,7 @@ async function getAllChatrooms() {
     });
     if (response.ok) {
       console.log("Get all chatrooms success");
+      console.log("fetching...");
       const res = await response.json();
       res.data.forEach((chatroom: ChatroomResult) => {
         if (chatroom.type === "private") {
@@ -49,7 +48,7 @@ async function getAllUsers() {
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
   try {
     const response = await fetch(`${backendURL}/api/auth/users`, {
-      next: { tags: ["users"], revalidate: revalidate },
+      next: { tags: ["users"] },
     });
     if (response.ok) {
       console.log("Get all users success");

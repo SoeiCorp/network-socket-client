@@ -85,6 +85,8 @@ export default function LoginForm() {
       } catch (error) {
         console.error("Error login user:", error);
         toast.error("System error");
+      } finally {
+        setPrimaryLoading(false);
       }
     }
   };
