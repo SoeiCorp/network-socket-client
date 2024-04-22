@@ -30,7 +30,6 @@ export default function RegisterForm() {
   const [errors, setErrors] = useState<RegisterForm>(
     structuredClone(defaultForm)
   );
-  const [isDisabled, setDisabled] = useState(false);
   const [primaryLoading, setPrimaryLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,8 +101,6 @@ export default function RegisterForm() {
       } catch (error) {
         console.error("Error registering user:", error);
         toast.error("System error");
-      } finally {
-        setPrimaryLoading(false);
       }
     }
   };
@@ -145,7 +142,7 @@ export default function RegisterForm() {
       />
       <PrimaryButton
         type="submit"
-        isDisabled={isDisabled}
+        isDisabled={primaryLoading}
         className="w-full mt-8 text-base"
         isLoading={primaryLoading}
         loadingMessage="กำลังดำเนินการ"

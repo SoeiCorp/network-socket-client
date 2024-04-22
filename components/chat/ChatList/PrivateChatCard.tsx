@@ -32,9 +32,7 @@ export default function PrivateChatCard({ user }: Props) {
         setChatroomId(res.data.id);
         router.push(`/chat/${res.data.id}`);
       } else {
-        console.error("Chatroom already created");
-        setChatroomId(res.data.id);
-        router.push(`/chat/${res.data.id}`);
+        console.error("Fail to create private chatroom succesfu");
       }
     } catch (error) {
       console.error("Error find or create private chatroom :", error);

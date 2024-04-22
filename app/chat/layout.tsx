@@ -14,6 +14,8 @@ export type UserResult = {
   name: string;
 };
 
+const revalidate = 60; // auto revalidate every minute
+
 // When other create new chatroom, tell every connector by ws
 async function getAllChatrooms() {
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
@@ -47,7 +49,7 @@ async function getAllUsers() {
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
   try {
     const response = await fetch(`${backendURL}/api/auth/users`, {
-      next: { tags: ["users"] },
+      next: { tags: ["users"], revalidate: revalidate },
     });
     if (response.ok) {
       console.log("Get all users success");
@@ -71,10 +73,7 @@ export default async function Layout({
   const allUsers = await getAllUsers();
   return (
     <div className="flex gap-4 h-full bg-white">
-      <ChatLayout
-        allUsers={allUsers}
-        allGroups={allChatrooms.groupChatrooms}
-      >
+      <ChatLayout allUsers={allUsers} allGroups={allChatrooms.groupChatrooms}>
         {children}
       </ChatLayout>
     </div>

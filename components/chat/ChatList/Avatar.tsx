@@ -30,7 +30,7 @@ const Avatar: React.FC<AvatarProps> = ({ name, userId, className }) => {
           color
         }
       >
-        <div className="text-slate-800">{name[0].toUpperCase()}</div>
+        <div className="text-slate-800">{!!name && name[0].toUpperCase()}</div>
       </div>
     </div>
   );

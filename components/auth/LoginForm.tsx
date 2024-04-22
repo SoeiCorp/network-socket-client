@@ -85,8 +85,6 @@ export default function LoginForm() {
       } catch (error) {
         console.error("Error login user:", error);
         toast.error("System error");
-      } finally {
-        setPrimaryLoading(false);
       }
     }
   };
@@ -115,7 +113,7 @@ export default function LoginForm() {
       />
       <PrimaryButton
         type="submit"
-        isDisabled={isDisabled}
+        isDisabled={primaryLoading}
         className="w-full mt-8 text-base"
         isLoading={primaryLoading}
         loadingMessage="กำลังดำเนินการ"
