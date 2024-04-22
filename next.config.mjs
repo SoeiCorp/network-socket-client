@@ -25,6 +25,15 @@ const nextConfig = {
                     { key: 'Access-Control-Allow-Headers', value: 'Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date' }
                 ]
             }
+            // {
+            //     source: '/',
+            //     headers: [
+            //         { key: 'Access-Control-Allow-Credentials', value: 'false' },
+            //         { key: 'Access-Control-Allow-Origin', value: process.env.NEXT_PUBLIC_SOCKET_SERVER_URL },
+            //         { key: 'Access-Control-Allow-Methods', value: 'GET,DELETE,PATCH,POST,PUT' },
+            //         { key: 'Access-Control-Allow-Headers', value: 'Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date' }
+            //     ]
+            // }
         ];
     }
 };
