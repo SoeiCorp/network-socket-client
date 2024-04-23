@@ -46,7 +46,7 @@ export async function GET(req: NextRequest, { params }: any) {
                 userId: item.user_id,
                 content: item.message,
                 type: item.message_type,
-                createdAt: item.createdAt,
+                createdAt: item.created_at,
                 userName: item.name
             }
         })

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       //           SELECT cu.chatroom_id FROM chatroom_users cu
       //           WHERE cu.user_id = ${userId}) AND user_id = ${reqBody.opponentUser})`);
       const foundChatroom = await query(`
-      SELECT * FROM chatrooms c
+      SELECT c.* FROM chatrooms c
       LEFT JOIN chatroom_users cu
       ON c.id = cu.chatroom_id
       WHERE c.chatroom_type = 'private' AND c.id IN (
@@ -38,11 +38,19 @@ export async function POST(req: NextRequest) {
       SELECT cu.chatroom_id FROM chatroom_users cu
       WHERE cu.user_id = ${userId}) AND user_id = ${reqBody.opponentUser})`)
       if (foundChatroom.rows.length) {
+        const modifiedFoundChatroom = foundChatroom.rows.map(item => {
+          return {
+            id: item.id,
+            name: item.name,
+            type: item.chatroom_type,
+            createdAt: item.created_at
+          }
+        })
         return NextResponse.json(
           {
             success: false,
             message: "Chatroom already created",
-            data: foundChatroom.rows[0],
+            data: modifiedFoundChatroom[0],
           },
           { status: 200 }
         );
