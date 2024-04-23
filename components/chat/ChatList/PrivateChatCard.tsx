@@ -14,12 +14,14 @@ type Props = {
 
 export default function PrivateChatCard({ user }: Props) {
   const [chatroomId, setChatroomId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const pathName = usePathname();
   const isChatRoom = pathName.endsWith(String(chatroomId));
   const router = useRouter();
   const { context, setContext } = useAppContext();
 
   const handleCreateChatroom = async () => {
+    setLoading(true);
     try {
       const response = await fetch("/api/chatrooms/", {
         method: "POST",
@@ -35,11 +37,13 @@ export default function PrivateChatCard({ user }: Props) {
         setChatroomId(res.data.id);
         socket.emit("create private", res.data.id);
         router.push(`/chat/${res.data.id}`);
+        setLoading(false);
       } else {
         console.error("Fail to create private chatroom succesfu");
       }
     } catch (error) {
       console.error("Error find or create private chatroom :", error);
+    } finally {
     }
   };
 
@@ -63,7 +67,9 @@ export default function PrivateChatCard({ user }: Props) {
         // Other users
         <button
           className={`${
-            isChatRoom ? "bg-slate-200" : "hover:bg-slate-100"
+            isChatRoom
+              ? "bg-slate-200"
+              : "active:bg-slate-200 hover:bg-slate-100"
           } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3`}
           onClick={handleCreateChatroom}
         >
@@ -73,6 +79,24 @@ export default function PrivateChatCard({ user }: Props) {
               <div className="font-medium text-[16px] text-slate-800 truncate max-w-[24ch] lg:max-w-[27ch]">
                 {user.name}
               </div>
+              {loading && (
+                <div>
+                  <svg
+                    className="animate-spin h-[25px] w-[25px] fill-slate-500"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                      opacity=".25"
+                      stroke="slate"
+                    />
+                    <path
+                      d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+                      stroke="slate"
+                    />
+                  </svg>
+                </div>
+              )}
             </div>
           </div>
         </button>

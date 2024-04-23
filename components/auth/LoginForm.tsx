@@ -75,7 +75,9 @@ export default function LoginForm() {
           console.log("User logged in successfully");
           toast.success("เข้าสู่ระบบสำเร็จ");
           router.push("/chat");
+          setPrimaryLoading(true);
         } else {
+          setPrimaryLoading(false);
           console.error("Login failed");
           setErrors({
             email: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
@@ -85,8 +87,6 @@ export default function LoginForm() {
       } catch (error) {
         console.error("Error login user:", error);
         toast.error("System error");
-      } finally {
-        setPrimaryLoading(false);
       }
     }
   };
