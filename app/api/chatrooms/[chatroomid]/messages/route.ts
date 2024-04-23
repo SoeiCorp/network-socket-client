@@ -40,13 +40,14 @@ export async function GET(req: NextRequest, { params }: any) {
         resultQuery = await pg.query(`SELECT chat_messages.*, users.name FROM chat_messages LEFT JOIN users ON chat_messages.user_id = users.id WHERE chat_messages.chatroom_id = '${params.chatroomid}'`)
         const result = resultQuery.rows;
         const modifiedResult = result.map((item: any) => {
+            const modifiedDate = new Date(item.created_at.getTime() + (7 * 60 * 60 * 1000))
             return {
                 id: item.id,
                 chatroomId: item.chatroom_id,
                 userId: item.user_id,
                 content: item.message,
                 type: item.message_type,
-                createdAt: item.created_at,
+                createdAt: modifiedDate,
                 userName: item.name
             }
         })
