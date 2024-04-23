@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/drizzle/db";
 import { sql } from "drizzle-orm";
+import { decodeToken } from "@/lib/auth";
 
 type ChatroomResult = {
   id: number;
@@ -12,7 +13,31 @@ type ChatroomResult = {
 
 export async function GET(req: NextRequest) {
   try {
-    const userId = req.headers.get("userId");
+    const auth = req.headers.get("Authorization");
+    let token;
+    if (auth && auth.startsWith('Bearer')) {
+      token = auth.split(' ')[1];
+    }
+    if (!token) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Token not found",
+        },
+        { status: 404 }
+      );
+    }
+    const { success, data } = await decodeToken(token);
+    if (!success || data === null) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid token",
+        },
+        { status: 400 }
+      );
+    }
+    const userId = data;
     let prepare = sql.empty();
     prepare = sql`
     SELECT 
@@ -31,15 +56,6 @@ export async function GET(req: NextRequest) {
     )
       AND c.chatroom_type = 'group'
     GROUP BY c.id`;
-    const test = await db.execute(sql`
-    SELECT *
-    FROM chatrooms c
-    WHERE c.id IN (
-      SELECT chatroom_id
-      FROM chatroom_users
-      WHERE user_id = ${userId}
-    )
-      AND c.chatroom_type = 'group'`)
     const result = await db.execute(prepare);
     // console.log(result.rows)
     const modifiedResult = result.rows.map(item => {

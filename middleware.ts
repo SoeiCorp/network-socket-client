@@ -53,7 +53,7 @@ export const config = {
     "/chat/:path*",
     "/api/auth/update",
     "/api/chatrooms",
-    "/api/chatrooms/group",
+    // "/api/chatrooms/group", -- > delete middleware as not used 
     "/api/chatrooms/:chatroomid/messages",
     "/api/chatrooms/:chatroomid/join",
     "/api/chatrooms/:chatroomid/leave",
