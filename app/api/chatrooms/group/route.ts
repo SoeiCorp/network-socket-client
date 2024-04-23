@@ -14,34 +14,10 @@ type ChatroomResult = {
 
 export async function GET(req: NextRequest) {
   try {
-    const auth = req.headers.get("Authorization");
-    let token;
-    if (auth && auth.startsWith('Bearer')) {
-      token = auth.split(' ')[1];
-    }
-    if (!token) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Token not found",
-        },
-        { status: 404 }
-      );
-    }
-    const { success, data } = await decodeToken(token);
-    if (!success || data === null) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid token",
-        },
-        { status: 400 }
-      );
-    }
-    const userId = data;
+    const userId = Number(req.headers.get("userId"));
     // let prepare = sql.empty();
     // prepare = sql`
-    // SELECT 
+    // SELECT
     //   c.id AS id,
     //   c.name AS name,
     //   c.chatroom_type AS type,
@@ -82,13 +58,13 @@ export async function GET(req: NextRequest) {
           WHERE user_id = ${userId}
         )
           AND c.chatroom_type = 'group'
-        GROUP BY c.id`)
+        GROUP BY c.id`);
     const modifiedResult = result.rows.map((item: any) => {
       return {
         ...item,
-        numUsers: parseInt(item.numUsers)
-      }
-    })
+        numUsers: parseInt(item.numUsers),
+      };
+    });
     return NextResponse.json(
       {
         success: true,

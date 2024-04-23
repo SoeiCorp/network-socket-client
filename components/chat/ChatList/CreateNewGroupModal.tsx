@@ -1,16 +1,20 @@
 import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { revalidateChatrooms } from "@/lib/actions";
 import { createGroupChatroom } from "@/components/socket/client";
+import { socket } from "@/components/socket/client";
+import { ChatroomResult } from "@/app/chat/layout";
 
 export default function CreateNewGroup({
   showCreateNewGroup,
   toggleCreateNewGroup,
+  setRevalidateChatrooms,
 }: {
   showCreateNewGroup: boolean;
   toggleCreateNewGroup: () => void;
+  setRevalidateChatrooms: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [groupName, setGroupName] = useState("");
   const [isDisabled, setDisabled] = useState(false);
@@ -37,7 +41,7 @@ export default function CreateNewGroup({
         console.log("Create group chatroom successfully");
         const res = await response.json();
         createGroupChatroom(res.data.id);
-        await revalidateChatrooms();
+        setRevalidateChatrooms((prev) => !prev);
         toast.success("สร้างกลุ่มสำเร็จ");
       } else {
         console.error("Create group chatroom fail");
@@ -59,6 +63,12 @@ export default function CreateNewGroup({
       handleCreateNewGroup();
     }
   };
+
+  useEffect(() => {
+    socket.on("create group", async (chatroom: ChatroomResult) => {
+      setRevalidateChatrooms((prev) => !prev);
+    });
+  }, []);
 
   return (
     showCreateNewGroup && (

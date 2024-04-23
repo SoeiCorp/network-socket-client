@@ -14,15 +14,20 @@ import {
   joinGroupChatroom,
   leaveGroupChatroom,
 } from "@/components/socket/client";
+import { socket } from "@/components/socket/client";
 
 interface Props {
   allGroups: {
     joinedGroup: ChatroomResult[];
     notJoinedGroup: ChatroomResult[];
   };
+  setRevalidateChatrooms: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function GroupChatCardList({ allGroups }: Props) {
+export default function GroupChatCardList({
+  allGroups,
+  setRevalidateChatrooms,
+}: Props) {
   // const [joinedChatrooms, setJoinedChatrooms] = useState<ChatroomResult[]>([]);
   // const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<
   //   ChatroomResult[]
@@ -87,7 +92,7 @@ export default function GroupChatCardList({ allGroups }: Props) {
         console.log("Join group successfully");
         toast.success("เข้าร่วมกลุ่มสำเร็จ");
         joinGroupChatroom(chatroomId);
-        await revalidateChatrooms();
+        setRevalidateChatrooms((prev) => !prev);
       } else {
         console.error("Join group fail");
         toast.error("เข้าร่วมกลุ่มไม่สำเร็จ");
@@ -114,7 +119,7 @@ export default function GroupChatCardList({ allGroups }: Props) {
         console.log("Leave group successfully");
         leaveGroupChatroom(chatroomId);
         toast.success("ออกกลุ่มสำเร็จ");
-        await revalidateChatrooms();
+        setRevalidateChatrooms((prev) => !prev);
       } else {
         console.error("Leave group fail");
         toast.error("ออกกลุ่มไม่สำเร็จ");
@@ -126,6 +131,19 @@ export default function GroupChatCardList({ allGroups }: Props) {
       // setLoading(false);
     }
   };
+
+  useEffect(() => {
+    socket.on(
+      "leave group",
+      async (chatroomId: string, leaveUserId: string) => {
+        setRevalidateChatrooms((prev) => !prev);
+      }
+    );
+
+    socket.on("join group", async (chatroomId: string, joinUserId: string) => {
+      setRevalidateChatrooms((prev) => !prev);
+    });
+  }, []);
 
   return (
     <div>

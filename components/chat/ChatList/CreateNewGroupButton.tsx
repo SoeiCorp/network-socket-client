@@ -2,7 +2,11 @@ import Image from "next/image";
 import { useState } from "react";
 import CreateNewGroupModal from "./CreateNewGroupModal";
 
-export default function CreateNewGroupButton() {
+export default function CreateNewGroupButton({
+  setRevalidateChatrooms,
+}: {
+  setRevalidateChatrooms: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [showCreateNewGroup, setShowCreateNewGroup] = useState(false);
 
   const toggleCreateNewGroup = () => {
@@ -29,6 +33,7 @@ export default function CreateNewGroupButton() {
       <CreateNewGroupModal
         showCreateNewGroup={showCreateNewGroup}
         toggleCreateNewGroup={toggleCreateNewGroup}
+        setRevalidateChatrooms={setRevalidateChatrooms}
       />
     </div>
   );
