@@ -18,7 +18,6 @@ const socketServerURL = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL || '';
 export let socket: Socket = io(socketServerURL, {
     withCredentials: true,
     transports: ['websocket']
-    transports: ['websocket']
 });
 
 export async function connect() {
@@ -36,10 +35,7 @@ export async function connect() {
         withCredentials: true,
         transports: ['websocket']
     });
-    socket = io(socketServerURL, {
-        withCredentials: true,
-        transports: ['websocket']
-    });
+
     console.log("Connect to socket");
     socket.on("connect_error", (err) => {
         // the reason of the error, for example "xhr poll error"
