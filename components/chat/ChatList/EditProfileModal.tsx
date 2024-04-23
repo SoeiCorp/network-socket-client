@@ -1,6 +1,7 @@
 import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
+import { updateUser } from "@/components/socket/client";
 import { useAppContext } from "@/context";
 
 export default function EditProfileModal({
@@ -33,7 +34,7 @@ export default function EditProfileModal({
       if (response.ok) {
         console.log("Edit name successfully");
         toast.success("แก้ไขชื่อสำเร็จ");
-        setName("");
+        updateUser(context.userId, name);
         setTrigger((prev: boolean) => !prev);
       } else {
         console.error("Edit name failed");
@@ -43,6 +44,7 @@ export default function EditProfileModal({
       console.error("Error edit user:", error);
       toast.error("System error");
     } finally {
+      setName("");
       setPrimaryLoading(false);
       setDisabled(false);
       toggleEditProfile();

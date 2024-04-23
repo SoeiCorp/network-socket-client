@@ -20,7 +20,11 @@ export let socket: Socket = io(socketServerURL, {
   transports: ["websocket"],
 });
 
-export async function connect() {
+export async function connect(
+  setRevalidateUsers: React.Dispatch<React.SetStateAction<boolean>>,
+  setOnlineIds: React.Dispatch<React.SetStateAction<string[]>>,
+  setAllUsers: React.Dispatch<React.SetStateAction<UserResult[]>>
+) {
   const res = await fetch("/api/auth/me");
   const response = await res.json();
   const { id } = response.data;
@@ -50,6 +54,22 @@ export async function connect() {
 
   socket.emit("login", id);
 
+  socket.on("users online", (data: string[]) => {
+    setRevalidateUsers((prev) => !prev);
+    setOnlineIds(data);
+  });
+  socket.on("update user", (userId: Number, name: String) => {
+    console.log("Socket update user");
+    setAllUsers((users) => {
+      return users.map((user) => {
+        if (user.id === userId) {
+          return { ...user, name: name } as UserResult;
+        }
+        return user;
+      });
+    });
+  });
+
   // socket.on('users online', (data: [userId: string]) => {
   //     console.log('users online', data)
   // })
@@ -65,12 +85,12 @@ export async function connect() {
   // socket.on('group message sent', (chatroomId: string, chatMessage: ChatMessageWithName, recipientId: string) => {
   //     console.log('Group message sent to:', recipientId, 'in', chatroomId, chatMessage)
   // })
-  socket.on("create group", (chatroom: ChatroomResult) => {
-    console.log("New chatroom:", chatroom);
-  });
-  socket.on("join group sent", (chatroomId: string, joinUserId: string) => {
-    console.log("Join chatroom:", chatroomId, joinUserId);
-  });
+  //   socket.on("create group", (chatroom: ChatroomResult) => {
+  //     console.log("New chatroom:", chatroom);
+  //   });
+  //   socket.on("join group sent", (chatroomId: string, joinUserId: string) => {
+  //     console.log("Join chatroom:", chatroomId, joinUserId);
+  //   });
   // socket.on('leave group', (chatroomId: string, leaveUserId: string) => {
   //     console.log('Leave chatroom:', chatroomId, leaveUserId)
   // })
@@ -144,6 +164,14 @@ export function disconnectFromSocket() {
 export function createGroupChatroom(chatroomId: Number) {
   if (socket) {
     socket.emit("create group", chatroomId);
+  } else {
+    console.log("socket not found");
+  }
+}
+
+export function updateUser(userId: Number, name: String) {
+  if (socket) {
+    socket.emit("update user", userId, name);
   } else {
     console.log("socket not found");
   }

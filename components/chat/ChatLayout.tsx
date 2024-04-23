@@ -32,17 +32,19 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
 
   // Connect to WS
   useEffect(() => {
-    connect();
-    socket.on("users online", async (data: string[]) => {
-      setRevalidateUsers((prev) => !prev);
-      setOnlineIds(data);
-    });
+    function connectToSocket() {
+      console.log("Connect to socket");
+      connect(setRevalidateUsers, setOnlineIds, setAllUsers);
+    }
+    connectToSocket();
   }, []);
 
   useEffect(() => {
     async function getJoinedGroup() {
       try {
-        const response = await fetch("/api/chatrooms/group");
+        const response = await fetch("/api/chatrooms/group", {
+          cache: "no-store",
+        });
         if (response.ok) {
           console.log("Get all joined group success");
           const res = await response.json();
@@ -63,7 +65,9 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
       let joinedGroup: ChatroomResult[] = [];
       let notJoinedGroup: ChatroomResult[] = [];
       try {
-        const response = await fetch("/api/chatrooms/all");
+        const response = await fetch("/api/chatrooms/all", {
+          cache: "no-store",
+        });
         if (response.ok) {
           console.log("Get all chatrooms success");
           console.log("fetching...");
@@ -99,8 +103,9 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
 
   useEffect(() => {
     async function getAllUsers() {
+      console.log("Enter getAllUsers!!!");
       try {
-        const response = await fetch("/api/auth/users");
+        const response = await fetch("/api/auth/users", { cache: "no-store" });
         if (response.ok) {
           console.log("Get all users success");
           const res = await response.json();
