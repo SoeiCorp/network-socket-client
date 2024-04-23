@@ -63,6 +63,27 @@ async function getAllUsers() {
   return [];
 }
 
+// // When new registerd come in, tell every connector by ws
+// async function getJoinedGroup() {
+//   try {
+//     const response = await fetch(`${backendURL}/api/chatrooms/group`, {
+//       method: "GET",
+//     });
+//     if (response.ok) {
+//       console.log("Get all joined group success");
+//       const res = await response.json();
+//       console.log(res.data);
+//     } else {
+//       console.log("enter here ?");
+//       console.log(response);
+//       throw new Error("Get all joined group failed");
+//     }
+//   } catch (error) {
+//     console.error("Error getting all joined group:", error);
+//   }
+//   // return [];
+// }
+
 export default async function Layout({
   children,
 }: Readonly<{

@@ -1,4 +1,3 @@
-"use client";
 import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -9,13 +8,9 @@ import { createGroupChatroom } from "@/components/socket/client";
 export default function CreateNewGroup({
   showCreateNewGroup,
   toggleCreateNewGroup,
-}: // session,
-// userId,
-{
+}: {
   showCreateNewGroup: boolean;
   toggleCreateNewGroup: () => void;
-  // session: Session | null
-  // userId: string
 }) {
   const [groupName, setGroupName] = useState("");
   const [isDisabled, setDisabled] = useState(false);
@@ -23,7 +18,7 @@ export default function CreateNewGroup({
 
   const router = useRouter();
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(event.target.value);
   };
 
@@ -55,8 +50,16 @@ export default function CreateNewGroup({
       setPrimaryLoading(false);
       setDisabled(false);
       toggleCreateNewGroup();
+      setGroupName("");
     }
   };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleCreateNewGroup();
+    }
+  };
+
   return (
     showCreateNewGroup && (
       <div
@@ -72,29 +75,26 @@ export default function CreateNewGroup({
               e.stopPropagation();
             }}
           >
-            <p className="font-bold text-[24px] text-slate-600 mb-[7px]">
-              แก้ไขโปรไฟล์
+            <p className="font-bold text-[24px] text-slate-600 mb-[7px] text-center pt-2">
+              สร้างกลุ่มใหม่ !
             </p>
 
             <div className="flex flex-col gap-1 flex-grow mt-[10px]">
-              <label
-                htmlFor="text-area"
-                className="text-[14px] font-medium text-slate-900"
-              >
-                ชื่อกลุ่ม
-              </label>
-              <textarea
+              <input
                 id="text-area"
                 name="name"
-                className="h-[100px] rounded-[6px] border border-[#CBD5E1] px-[10px] py-[5px] "
+                type="text"
+                className="py-[10px] rounded-[6px] border border-[#CBD5E1] px-[10px]"
                 onChange={handleChange}
                 value={groupName}
-              ></textarea>
+                placeholder="ชื่อกลุ่ม"
+                onKeyDown={handleKeyPress} // Handle Enter key press
+              ></input>
             </div>
 
             <div className="mt-[20px] flex justify-between">
               <button
-                className="w-[47%] rounded-[6px] border border-[#E2E8F0] text-[#0F172A] py-[10px] hover:opacity-[80%] active:opacity-[60%]"
+                className="w-[47%] rounded-[6px] border border-slate-300 text-[#0F172A] py-[10px] active:opacity-10 hover:opacity-60"
                 onClick={() => {
                   toggleCreateNewGroup();
                 }}
@@ -104,12 +104,12 @@ export default function CreateNewGroup({
               <PrimaryButton
                 type="submit"
                 isDisabled={isDisabled}
-                className="w-[47%] rounded-[6px] text-[#FFFFFF] bg-[#334155] py-[10px] hover:opacity-[80%] active:opacity-[60%]"
+                className="w-[47%] rounded-[6px] text-[#FFFFFF] bg-[#334155] py-[10px] hover:opacity-[80%] active:opacity-60"
                 isLoading={primaryLoading}
                 onClick={handleCreateNewGroup}
                 loadingMessage="กำลังดำเนินการ"
               >
-                ยืนยันการสร้างกลุ่ม
+                สร้างกลุ่ม
               </PrimaryButton>
             </div>
           </div>

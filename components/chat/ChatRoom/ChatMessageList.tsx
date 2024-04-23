@@ -31,7 +31,7 @@ export default function ChatMessageList({
   const [messagesByDate, setMessagesByDate] = useState<MessagesGroupByDate[]>(
     []
   );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { context, setContext } = useAppContext();
   const userId = context.userId;
 
@@ -41,6 +41,7 @@ export default function ChatMessageList({
       userId: number
     ) => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `/api/chatrooms/${currentChatroomId}/messages`
         );
@@ -56,6 +57,8 @@ export default function ChatMessageList({
         }
       } catch (error) {
         console.error("Error fetching chat messages:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchChatMessages(currentChatroomId, userId);
@@ -131,7 +134,7 @@ export default function ChatMessageList({
         <div className="flex flex-col items-center justify-center text-slate-400 text-[14px] h-full w-full px-3 pb-[6px] overflow-y-auto overflow-x-hidden pt-4 lg:px-3 lg:pb-2 lg:text-[16px]">
           {/* <div className="w-8 h-8 border-[6px] border-slate-400 rounded-full animate-spin"></div> */}
           <svg
-            className="animate-spin h-[48px] w-[48px] text-slate-800 lg:h-8 lg:w-8"
+            className="animate-spin h-[48px] w-[48px] fill-slate-500 lg:h-8 lg:w-8"
             viewBox="0 0 24 24"
           >
             <path

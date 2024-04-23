@@ -46,7 +46,7 @@ export default function ChatLayout({
         {/* Selector between private/group chat */}
         <div className="w-full bg-slate-200 h-[50px] rounded-md p-[6px] flex items-center text-slate-800">
           <button
-            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+            className={`w-1/2 h-full flex items-center justify-center rounded-md active:bg-slate-50 hover:bg-slate-100 ${
               isPrivateChat ? "bg-white" : "bg-slate-200"
             }`}
             onClick={() => setPrivateChat(true)}
@@ -61,7 +61,7 @@ export default function ChatLayout({
             <p className="text-sm">แชทส่วนตัว</p>
           </button>
           <button
-            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+            className={`w-1/2 h-full flex items-center justify-center rounded-md active:bg-slate-50 hover:bg-slate-100 ${
               isPrivateChat ? "bg-slate-200" : "bg-white"
             }`}
             onClick={() => setPrivateChat(false)}

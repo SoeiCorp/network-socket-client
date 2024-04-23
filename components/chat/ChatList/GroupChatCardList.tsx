@@ -42,8 +42,20 @@ export default function GroupChatCardList({ allGroups }: Props) {
           const res = await response.json();
           const joined = res.data;
           const notJoined = getUnjoinedChatrooms(allGroups, joined);
-          setJoinedChatrooms(joined);
-          setNotJoinedChatrooms(notJoined);
+          setJoinedChatrooms(
+            joined.sort(
+              (a: ChatroomResult, b: ChatroomResult) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+          );
+          setNotJoinedChatrooms(
+            notJoined.sort(
+              (a: ChatroomResult, b: ChatroomResult) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+          );
         } else {
           throw new Error("Get all group chatrooms of user failed");
         }
