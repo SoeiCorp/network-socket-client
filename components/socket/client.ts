@@ -40,10 +40,10 @@ export async function connect() {
         console.log(err.message);
 
         // some additional description, for example the status code of the initial HTTP response
-        console.log(err.description);
+        // console.log(err.description);
 
         // some additional context, for example the XMLHttpRequest object
-        console.log(err.context);
+        // console.log(err.context);
     });
 
     socket.emit("login", id);
