@@ -16,57 +16,62 @@ import {
 } from "@/components/socket/client";
 
 interface Props {
-  allGroups: ChatroomResult[];
+  allGroups: {
+    joinedGroup: ChatroomResult[];
+    notJoinedGroup: ChatroomResult[];
+  };
 }
 
 export default function GroupChatCardList({ allGroups }: Props) {
-  const [joinedChatrooms, setJoinedChatrooms] = useState<ChatroomResult[]>([]);
-  const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<
-    ChatroomResult[]
-  >([]);
+  // const [joinedChatrooms, setJoinedChatrooms] = useState<ChatroomResult[]>([]);
+  // const [notJoinedChatrooms, setNotJoinedChatrooms] = useState<
+  //   ChatroomResult[]
+  // >([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { context, setTrigger } = useAppContext();
   const name = context.name;
   const userId = context.userId;
+  const joinedChatrooms = allGroups.joinedGroup;
+  const notJoinedChatrooms = allGroups.notJoinedGroup;
 
-  // TODO : Fetch all joined group chatrooms from db
-  useEffect(() => {
-    const fetchChatGroupData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/chatrooms/group", {
-          method: "GET",
-        });
-        if (response.ok) {
-          console.log("Get all group chatrooms of user sucess");
-          const res = await response.json();
-          const joined = res.data;
-          const notJoined = getUnjoinedChatrooms(allGroups, joined);
-          setJoinedChatrooms(
-            joined.sort(
-              (a: ChatroomResult, b: ChatroomResult) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-          );
-          setNotJoinedChatrooms(
-            notJoined.sort(
-              (a: ChatroomResult, b: ChatroomResult) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-          );
-        } else {
-          throw new Error("Get all group chatrooms of user failed");
-        }
-      } catch (error) {
-        console.error("Error get all group chatrooms of user:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchChatGroupData();
-  }, [allGroups]);
+  // // TODO : Fetch all joined group chatrooms from db
+  // useEffect(() => {
+  //   const fetchChatGroupData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await fetch("/api/chatrooms/group", {
+  //         method: "GET",
+  //       });
+  //       if (response.ok) {
+  //         console.log("Get all group chatrooms of user sucess");
+  //         const res = await response.json();
+  //         const joined = res.data;
+  //         const notJoined = getUnjoinedChatrooms(allGroups, joined);
+  //         setJoinedChatrooms(
+  //           joined.sort(
+  //             (a: ChatroomResult, b: ChatroomResult) =>
+  //               new Date(b.createdAt).getTime() -
+  //               new Date(a.createdAt).getTime()
+  //           )
+  //         );
+  //         setNotJoinedChatrooms(
+  //           notJoined.sort(
+  //             (a: ChatroomResult, b: ChatroomResult) =>
+  //               new Date(b.createdAt).getTime() -
+  //               new Date(a.createdAt).getTime()
+  //           )
+  //         );
+  //       } else {
+  //         throw new Error("Get all group chatrooms of user failed");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error get all group chatrooms of user:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchChatGroupData();
+  // }, [allGroups]);
 
   const handleJoinChat = async (chatroomId: number) => {
     try {
