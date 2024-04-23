@@ -17,7 +17,10 @@ import { revalidateUsers } from "@/lib/actions";
 interface ChatLayoutProps {
   children: React.ReactNode;
   allUsers: UserResult[];
-  allGroups: ChatroomResult[];
+  allGroups: {
+    joinedGroup: ChatroomResult[];
+    notJoinedGroup: ChatroomResult[];
+  };
 }
 
 export default function ChatLayout({
