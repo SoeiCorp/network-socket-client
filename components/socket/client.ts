@@ -14,6 +14,7 @@ import { revalidateChatrooms } from "@/lib/actions";
 const socketServerURL = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL || '';
 
 // export let socket: Socket;
+// export let socket: Socket;
 export let socket: Socket = io(socketServerURL, {
     withCredentials: true,
     transports: ['websocket']
@@ -34,16 +35,17 @@ export async function connect() {
         withCredentials: true,
         transports: ['websocket']
     });
+
     console.log("Connect to socket");
     socket.on("connect_error", (err) => {
         // the reason of the error, for example "xhr poll error"
         console.log(err.message);
 
         // some additional description, for example the status code of the initial HTTP response
-        console.log(err.description);
+        // console.log(err.description);
 
         // some additional context, for example the XMLHttpRequest object
-        console.log(err.context);
+        // console.log(err.context);
     });
 
     socket.emit("login", id);
