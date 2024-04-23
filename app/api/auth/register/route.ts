@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/drizzle/db";
 import { users, NewUser, User } from "@/drizzle/schemas/users";
 import { createToken } from "@/lib/auth";
-import { query } from "@/lib/db";
+import { pg } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const bcrypt = require("bcrypt");
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(reqBody.password, salt);
     reqBody.password = hashedPassword;
     // const user: User[] = await db.insert(users).values(reqBody).returning();
-    result = await query(`
+    result = await pg.query(`
       INSERT INTO users (name, email, password)
       VALUES ('${reqBody.name}', '${reqBody.email}', '${reqBody.password}')
       RETURNING *`)

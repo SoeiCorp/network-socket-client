@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/drizzle/db';
 import { users } from '@/drizzle/schemas/users';
-import { query } from '@/lib/db';
+import { pg } from '@/lib/db';
 
 type Result = {
     id: number
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         //     name: users.name
         // }).from(users)
         // console.log(allUsers)
-        const allUsers = await query<Result>('SELECT id, name FROM users')
+        const allUsers = await pg.query('SELECT id, name FROM users')
         return NextResponse.json({
             success: true,
             message: 'Successfully get all users',

@@ -3,14 +3,14 @@ import { db } from '@/drizzle/db';
 import { and, eq } from 'drizzle-orm';
 import { Chatroom, chatrooms } from '@/drizzle/schemas/chatrooms';
 import { ChatroomUser, chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
-import { query } from '@/lib/db';
+import { pg } from '@/lib/db';
 
 export async function POST(req: NextRequest, { params }: any) {
     try {
         let result;
         const userId = Number(req.headers.get('userId'))
         // const chatroom: Chatroom[] = await db.select().from(chatrooms).where(and(eq(chatrooms.id, params.chatroomid)))
-        result = await query(`SELECT * FROM chatrooms WHERE id='${params.chatroomid}'`)
+        result = await pg.query(`SELECT * FROM chatrooms WHERE id='${params.chatroomid}'`)
         const chatroom = result.rows
         if (chatroom[0].type === 'private') {
             return NextResponse.json({
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest, { params }: any) {
         //     chatroomId: params.chatroomid,
         //     userId: userId
         // }).returning()
-        result = await query(`INSERT INTO chatroom_users (chatroom_id, user_id) VALUES('${params.chatroomid}', ${userId}) RETURNING *`)
+        result = await pg.query(`INSERT INTO chatroom_users (chatroom_id, user_id) VALUES('${params.chatroomid}', ${userId}) RETURNING *`)
         const chatroomUser = result.rows;
         const modifiedChatroomUser = chatroomUser.map(item => {
             return {

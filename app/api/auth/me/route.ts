@@ -3,7 +3,7 @@ import { db } from '@/drizzle/db';
 import { users, User } from '@/drizzle/schemas/users'
 import jwt from 'jsonwebtoken'
 import { eq } from 'drizzle-orm';
-import { query } from '@/lib/db';
+import { pg } from '@/lib/db';
 
 interface JwtPayload {
     id: number,
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         if (token) {
             const decoded = jwt.verify(token, process.env.JWT_SECRET || '') as JwtPayload
             // const user: User[] = await db.select().from(users).where(eq(users.id, decoded.id))
-            const result = await query(`SELECT * FROM users WHERE id='${decoded.id}'`)
+            const result = await pg.query(`SELECT * FROM users WHERE id='${decoded.id}'`)
             const user = result.rows
             const modifiedUser = user.map(item => {
                 return {

@@ -4,7 +4,7 @@ import { users } from "@/drizzle/schemas/users";
 import { eq } from "drizzle-orm";
 import { createToken } from "@/lib/auth";
 import { reqBody } from "./reqBody";
-import { query } from "@/lib/db";
+import { pg } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const bcrypt = require("bcrypt");
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     //   .from(users)
     //   .where(eq(users.email, reqBody.email));
     console.log(reqBody.email)
-    const result = await query(`SELECT * FROM users WHERE users.email='${reqBody.email}'`)
+    const result = await pg.query(`SELECT * FROM users WHERE users.email='${reqBody.email}'`)
     console.log(result)
     const user = result.rows
     if (!user.length) {

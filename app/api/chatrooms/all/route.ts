@@ -3,7 +3,7 @@ import { db } from '@/drizzle/db';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';
 import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 import { eq } from 'drizzle-orm';
-import { query } from '@/lib/db';
+import { pg } from '@/lib/db';
 
 type ChatroomResult = {
     id: number;
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
         //     }
         //     return accum;
         // }, []);
-        result = await query(`
+        result = await pg.query(`
             SELECT 
 	            chatrooms.id,
 	            chatrooms.name,

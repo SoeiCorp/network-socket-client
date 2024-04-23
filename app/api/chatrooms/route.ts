@@ -7,7 +7,7 @@ import { ChatroomUser, chatroomUsers } from "@/drizzle/schemas/chatroomUsers";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { users } from "@/drizzle/schemas/users";
-import { query } from "@/lib/db";
+import { pg } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       //           WHERE cu.chatroom_id IN (
       //           SELECT cu.chatroom_id FROM chatroom_users cu
       //           WHERE cu.user_id = ${userId}) AND user_id = ${reqBody.opponentUser})`);
-      const foundChatroom = await query(`
+      const foundChatroom = await pg.query(`
       SELECT c.* FROM chatrooms c
       LEFT JOIN chatroom_users cu
       ON c.id = cu.chatroom_id

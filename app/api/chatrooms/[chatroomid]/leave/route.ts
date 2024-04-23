@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { ChatroomUser, chatroomUsers } from "@/drizzle/schemas/chatroomUsers";
-import { query } from "@/lib/db";
+import { pg } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,7 +9,7 @@ export async function DELETE(req: NextRequest, { params }: any) {
         let result;
         const userId = Number(req.headers.get('userId'));
         // const chatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid)))
-        result = await query(`SELECT * FROM chatroom_users WHERE user_id='${userId}' AND chatroom_id='${params.chatroomid}'`)
+        result = await pg.query(`SELECT * FROM chatroom_users WHERE user_id='${userId}' AND chatroom_id='${params.chatroomid}'`)
         const chatroom = result.rows;
         if (!chatroom.length) {
             return NextResponse.json({
@@ -18,7 +18,7 @@ export async function DELETE(req: NextRequest, { params }: any) {
             }, { status: 400 })
         }
         // const deletedUser: ChatroomUser[] = await db.delete(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid))).returning();
-        result = await query(`DELETE FROM chatroom_users WHERE user_id = '${userId}' AND chatroom_id = '${params.chatroomid}' RETURNING *`)
+        result = await pg.query(`DELETE FROM chatroom_users WHERE user_id = '${userId}' AND chatroom_id = '${params.chatroomid}' RETURNING *`)
         const deletedUser = result.rows
         const modifiedDeltedUser = deletedUser.map(item => {
             return {

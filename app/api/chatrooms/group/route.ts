@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/drizzle/db";
 import { sql } from "drizzle-orm";
 import { decodeToken } from "@/lib/auth";
-import { query } from "@/lib/db";
+import { pg } from "@/lib/db";
 
 type ChatroomResult = {
   id: number;
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     //   return modifiedItem
     // })
     let result;
-    result = await query(`
+    result = await pg.query(`
         SELECT 
           c.id AS id,
           c.name AS name,

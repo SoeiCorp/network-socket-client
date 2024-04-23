@@ -1,13 +1,18 @@
-import { Pool, QueryResultRow } from 'pg'
+import { Client, Pool, QueryResultRow } from 'pg'
+
+const globalForPg = globalThis as unknown as { pg: any }
 
 // Creates a global connection pool
-const pool = new Pool({
+export const pg = globalForPg.pg || new Client({
   connectionString: process.env.NEON_PG_URL,
 })
 
-export const query = <Result extends QueryResultRow>(
-  text: string,
-  params: any[] = []
-) => {
-  return pool.query<Result>(text, params)
-}
+if (process.env.NODE_ENV !== 'production') globalForPg.pg = pg
+
+
+// export const query = <Result extends QueryResultRow>(
+//   text: string,
+//   params: any[] = []
+// ) => {
+//   return pool.query<Result>(text, params)
+// }
