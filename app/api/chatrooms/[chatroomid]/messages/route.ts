@@ -16,17 +16,14 @@ export async function GET(req: NextRequest, { params }: any) {
                 message: 'Invalid chatroom user',
             }, { status: 400 })
         }
-        const chatroom = await db.select().from(chatrooms);
+        const chatroom = await db.select().from(chatrooms).where(eq(chatrooms.id, params.chatroomid));
         if (!chatroom.length) {
             return NextResponse.json({
                 success: false,
                 message: 'Chatroom not found',
             }, { status: 404 })
         }
-        const result = await db.select({
-            users: users,
-            chat_messages: chatMessages
-        }).from(chatMessages).leftJoin(users, eq(chatMessages.userId, users.id)).where(eq(chatMessages.chatroomId, params.chatroomid));
+        const result = await db.select().from(chatMessages).leftJoin(users, eq(chatMessages.userId, users.id)).where(eq(chatMessages.chatroomId, params.chatroomid));
         const modifiedResult = result.map(item => {
             const { chat_messages, users } = item;
             return {
