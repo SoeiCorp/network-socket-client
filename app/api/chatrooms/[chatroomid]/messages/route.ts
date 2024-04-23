@@ -5,32 +5,51 @@ import { chatMessages } from '@/drizzle/schemas/chatMessages';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';
 import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 import { User, users } from '@/drizzle/schemas/users';
+import { query } from '@/lib/db';
 
 export async function GET(req: NextRequest, { params }: any) {
     try {
+        let resultQuery;
         const userId = Number(req.headers.get('userId'))
-        const validChatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid)))
+        // const validChatroom = await db.select().from(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid)))
+        resultQuery = await query(`SELECT * FROM chatroom_users WHERE user_id='${userId}' AND chatroom_id='${params.chatroomid}'`)
+        const validChatroom = resultQuery.rows
         if (!validChatroom.length) {
             return NextResponse.json({
                 success: false,
                 message: 'Invalid chatroom user',
             }, { status: 400 })
         }
-        const chatroom = await db.select().from(chatrooms).where(eq(chatrooms.id, params.chatroomid));
+        // const chatroom = await db.select().from(chatrooms).where(eq(chatrooms.id, params.chatroomid));
+        resultQuery = await query(`SELECT * FROM chatrooms WHERE id = '${params.chatroomid}'`)
+        const chatroom = resultQuery.rows
         if (!chatroom.length) {
             return NextResponse.json({
                 success: false,
                 message: 'Chatroom not found',
             }, { status: 404 })
         }
-        const result = await db.select().from(chatMessages).leftJoin(users, eq(chatMessages.userId, users.id)).where(eq(chatMessages.chatroomId, params.chatroomid));
+        // const result = await db.select().from(chatMessages).leftJoin(users, eq(chatMessages.userId, users.id)).where(eq(chatMessages.chatroomId, params.chatroomid));
+        // const modifiedResult = result.map(item => {
+        //     const { chat_messages, users } = item;
+        //     return {
+        //         ...chat_messages,
+        //         userName: users?.name
+        //     };
+        // });
+        resultQuery = await query(`SELECT chat_messages.*, users.name FROM chat_messages LEFT JOIN users ON chat_messages.user_id = users.id WHERE chat_messages.chatroom_id = '${params.chatroomid}'`)
+        const result = resultQuery.rows;
         const modifiedResult = result.map(item => {
-            const { chat_messages, users } = item;
             return {
-                ...chat_messages,
-                userName: users?.name
-            };
-        });
+                id: item.id,
+                chatroomId: item.chatroom_id,
+                userId: item.user_id,
+                content: item.message,
+                type: item.message_type,
+                createdAt: item.createdAt,
+                userName: item.name
+            }
+        })
         return NextResponse.json({
             success: true,
             message: 'Successfully get all chat messages',
