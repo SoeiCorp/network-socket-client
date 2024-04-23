@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, { params }: any) {
         // }).returning()
         result = await pg.query(`INSERT INTO chatroom_users (chatroom_id, user_id) VALUES('${params.chatroomid}', ${userId}) RETURNING *`)
         const chatroomUser = result.rows;
-        const modifiedChatroomUser = chatroomUser.map(item => {
+        const modifiedChatroomUser = chatroomUser.map((item: any) => {
             return {
                 chatroomId: item.chatroom_id,
                 userId: item.user_id,

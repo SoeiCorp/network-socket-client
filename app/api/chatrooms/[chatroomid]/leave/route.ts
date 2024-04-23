@@ -20,7 +20,7 @@ export async function DELETE(req: NextRequest, { params }: any) {
         // const deletedUser: ChatroomUser[] = await db.delete(chatroomUsers).where(and(eq(chatroomUsers.userId, userId), eq(chatroomUsers.chatroomId, params.chatroomid))).returning();
         result = await pg.query(`DELETE FROM chatroom_users WHERE user_id = '${userId}' AND chatroom_id = '${params.chatroomid}' RETURNING *`)
         const deletedUser = result.rows
-        const modifiedDeltedUser = deletedUser.map(item => {
+        const modifiedDeltedUser = deletedUser.map((item: any) => {
             return {
                 chatroomId: item.chatroom_id,
                 userId: item.user_id,

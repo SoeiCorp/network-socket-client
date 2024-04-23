@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
         )
           AND c.chatroom_type = 'group'
         GROUP BY c.id`)
-    const modifiedResult = result.rows.map(item => {
+    const modifiedResult = result.rows.map((item: any) => {
       return {
         ...item,
         numUsers: parseInt(item.numUsers)

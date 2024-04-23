@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, { params }: any) {
         // });
         resultQuery = await pg.query(`SELECT chat_messages.*, users.name FROM chat_messages LEFT JOIN users ON chat_messages.user_id = users.id WHERE chat_messages.chatroom_id = '${params.chatroomid}'`)
         const result = resultQuery.rows;
-        const modifiedResult = result.map(item => {
+        const modifiedResult = result.map((item: any) => {
             return {
                 id: item.id,
                 chatroomId: item.chatroom_id,

@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
             // const user: User[] = await db.select().from(users).where(eq(users.id, decoded.id))
             const result = await pg.query(`SELECT * FROM users WHERE id='${decoded.id}'`)
             const user = result.rows
-            const modifiedUser = user.map(item => {
+            const modifiedUser = user.map((item: any) => {
                 return {
                     id: item.id,
                     name: item.name,

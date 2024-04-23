@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       SELECT cu.chatroom_id FROM chatroom_users cu
       WHERE cu.user_id = ${userId}) AND user_id = ${reqBody.opponentUser})`)
       if (foundChatroom.rows.length) {
-        const modifiedFoundChatroom = foundChatroom.rows.map(item => {
+        const modifiedFoundChatroom = foundChatroom.rows.map((item: any) => {
           return {
             id: item.id,
             name: item.name,
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     //     type: reqBody.type,
     //   })
     //   .returning();
-    result = await query(`
+    result = await pg.query(`
       INSERT INTO chatrooms (name, chatroom_type)
       VALUES ('${reqBody.name}', '${reqBody.type}')
       RETURNING *`)
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     //     userId: userId,
     //   })
     //   .returning();
-    result = await query(`
+    result = await pg.query(`
       INSERT INTO chatroom_users (chatroom_id, user_id)
       VALUES ('${chatroom[0].id}', '${userId}')
       RETURNING *`)
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       //     userId: reqBody.opponentUser,
       //   })
       //   .returning();
-      result = await query(`
+      result = await pg.query(`
         INSERT INTO chatroom_users (chatroom_id, user_id)
         VALUES ('${chatroom[0].id}', '${reqBody.opponentUser}')
         RETURNING *`)

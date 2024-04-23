@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
 	            chatrooms.name,
 	            chatrooms.chatroom_type,
 	            chatrooms.created_at`)
-        const modifiedResult = result.rows.map(item => {
+        const modifiedResult = result.rows.map((item: any) => {
             return {
                 id: item.id,
                 name: item.name,
