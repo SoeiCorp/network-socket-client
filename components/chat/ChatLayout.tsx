@@ -16,27 +16,109 @@ import { revalidateUsers } from "@/lib/actions";
 
 interface ChatLayoutProps {
   children: React.ReactNode;
-  allUsers: UserResult[];
-  allGroups: ChatroomResult[];
 }
 
-export default function ChatLayout({
-  children,
-  allUsers,
-  allGroups,
-}: ChatLayoutProps) {
+export default function ChatLayout({ children }: ChatLayoutProps) {
   // Switch between private and group chatrooms list
   const [isPrivateChat, setPrivateChat] = useState(true);
   const [onlineIds, setOnlineIds] = useState<string[]>([]);
+  const [allUsers, setAllUsers] = useState<UserResult[]>([]);
+  const [allGroups, setAllGroups] = useState<{
+    joinedGroup: ChatroomResult[];
+    notJoinedGroup: ChatroomResult[];
+  }>({ joinedGroup: [], notJoinedGroup: [] });
+  const [revalidateUsers, setRevalidateUsers] = useState(false);
+  const [revalidateChatrooms, setRevalidateChatrooms] = useState(false);
+  const [onlineLoading, setOnlineLoading] = useState(true);
 
   // Connect to WS
   useEffect(() => {
-    connect();
-    socket.on("users online", async (data: string[]) => {
-      await revalidateUsers();
-      setOnlineIds(data);
-    });
+    function connectToSocket() {
+      connect(setRevalidateUsers, setOnlineIds, setAllUsers, setOnlineLoading);
+    }
+    connectToSocket();
   }, []);
+
+  useEffect(() => {
+    async function getJoinedGroup() {
+      try {
+        const response = await fetch("/api/chatrooms/group", {
+          cache: "no-store",
+        });
+        if (response.ok) {
+          console.log("Get all joined group success");
+          const res = await response.json();
+          return res.data;
+        } else {
+          console.log(response);
+          throw new Error("Get all joined group failed");
+        }
+      } catch (error) {
+        console.error("Error getting all joined group:", error);
+      }
+      return [];
+    }
+
+    async function getAllChatrooms() {
+      let privateChatrooms: ChatroomResult[] = [];
+      let groupChatrooms: ChatroomResult[] = [];
+      let joinedGroup: ChatroomResult[] = [];
+      let notJoinedGroup: ChatroomResult[] = [];
+      try {
+        const response = await fetch("/api/chatrooms/all", {
+          cache: "no-store",
+        });
+        if (response.ok) {
+          console.log("Get all chatrooms success");
+          console.log("fetching...");
+          const res = await response.json();
+          res.data.forEach((chatroom: ChatroomResult) => {
+            if (chatroom.type === "private") {
+              privateChatrooms.push(chatroom);
+            } else if (chatroom.type === "group") {
+              groupChatrooms.push(chatroom);
+            }
+          });
+          joinedGroup = (await getJoinedGroup()).sort(
+            (a: ChatroomResult, b: ChatroomResult) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          notJoinedGroup = getUnjoinedChatrooms(
+            groupChatrooms,
+            joinedGroup
+          ).sort(
+            (a: ChatroomResult, b: ChatroomResult) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        } else {
+          throw new Error("Get all chatrooms failed");
+        }
+      } catch (error) {
+        console.error("Error fetching chatrooms:", error);
+      }
+      setAllGroups({ joinedGroup, notJoinedGroup });
+    }
+    getAllChatrooms();
+  }, [revalidateChatrooms]);
+
+  useEffect(() => {
+    async function getAllUsers() {
+      console.log("Enter getAllUsers!!!");
+      try {
+        const response = await fetch("/api/auth/users", { cache: "no-store" });
+        if (response.ok) {
+          console.log("Get all users success");
+          const res = await response.json();
+          setAllUsers(res.data);
+        } else {
+          throw new Error("Get all users failed");
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    }
+    getAllUsers();
+  }, [revalidateUsers]);
 
   return (
     <AppWrapper>
@@ -46,7 +128,7 @@ export default function ChatLayout({
         {/* Selector between private/group chat */}
         <div className="w-full bg-slate-200 h-[50px] rounded-md p-[6px] flex items-center text-slate-800">
           <button
-            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+            className={`w-1/2 h-full flex items-center justify-center rounded-md active:bg-slate-50 hover:bg-slate-100 ${
               isPrivateChat ? "bg-white" : "bg-slate-200"
             }`}
             onClick={() => setPrivateChat(true)}
@@ -61,7 +143,7 @@ export default function ChatLayout({
             <p className="text-sm">แชทส่วนตัว</p>
           </button>
           <button
-            className={`w-1/2 h-full flex items-center justify-center rounded-md ${
+            className={`w-1/2 h-full flex items-center justify-center rounded-md active:bg-slate-50 hover:bg-slate-100 ${
               isPrivateChat ? "bg-slate-200" : "bg-white"
             }`}
             onClick={() => setPrivateChat(false)}
@@ -78,16 +160,27 @@ export default function ChatLayout({
         </div>
 
         {/* Create new group bar */}
-        {!isPrivateChat && <CreateNewGroupButton />}
+        {!isPrivateChat && (
+          <CreateNewGroupButton
+            setRevalidateChatrooms={setRevalidateChatrooms}
+          />
+        )}
 
         {/* ChatCardList base on isGroupChat */}
         {isPrivateChat ? (
           <div className="overflow-y-auto mt-[10px] h-[75%]">
-            <PrivateChatCardList allUsers={allUsers} onlineIds={onlineIds} />
+            <PrivateChatCardList
+              allUsers={allUsers}
+              onlineIds={onlineIds}
+              onlineLoading={onlineLoading}
+            />
           </div>
         ) : (
           <div className="overflow-y-auto mt-[10px] h-[70%]">
-            <GroupChatCardList allGroups={allGroups} />
+            <GroupChatCardList
+              allGroups={allGroups}
+              setRevalidateChatrooms={setRevalidateChatrooms}
+            />
           </div>
         )}
 
@@ -99,3 +192,15 @@ export default function ChatLayout({
     </AppWrapper>
   );
 }
+
+const getUnjoinedChatrooms = (
+  all: ChatroomResult[],
+  joined: ChatroomResult[]
+): ChatroomResult[] => {
+  // Filter out the chatrooms that are not in the joinedChatrooms array
+  const unjoined = all.filter(
+    (chatroom) =>
+      !joined.some((joinedChatroom) => joinedChatroom.id === chatroom.id)
+  );
+  return unjoined;
+};

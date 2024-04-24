@@ -33,7 +33,7 @@ export default function JoinedGroupChatCard({
   return (
     <Link
       className={`${
-        isChatRoom ? "bg-slate-200" : "hover:bg-slate-100"
+        isChatRoom ? "bg-slate-200" : "active:bg-slate-200 hover:bg-slate-100"
       } px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3 flex justify-between`}
       href={`/chat/${String(chatroom.id)}`}
     >
@@ -67,7 +67,7 @@ export default function JoinedGroupChatCard({
         showConfirmLeaveChat={showConfirmLeaveChat}
         toggleConfirmLeaveChat={toggleConfirmLeaveChat}
         handleLeaveChat={handleLeaveChat}
-        chatroomId={leaveChatIdRef.current}
+        chatroom={chatroom}
       />
     </Link>
   );

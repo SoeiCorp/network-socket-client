@@ -9,7 +9,7 @@ import { chatMessages, ChatMessage, NewChatMessage } from './schemas/chatMessage
 
 const main = async () => {
     const db = drizzle(createPool({
-        connectionString: process.env.POSTGRES_URL
+        connectionString: process.env.POSTGRES_URL_POOLED
     }));
     await db.delete(chatMessages)
     await db.delete(chatroomUsers)

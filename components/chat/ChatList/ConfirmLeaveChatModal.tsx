@@ -1,36 +1,47 @@
-"use client";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import LoadingRing from "@/public/icons/loading-ring.svg";
 import toast from "react-hot-toast";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-// import { Session } from "next-auth"
-// import updateProfile from "@/actions/profile/updateProfile"
+import { useRouter } from "next/router";
+import { ChatroomResult } from "@/app/chat/layout";
 
 export default function ConfirmLeaveChatModal({
   showConfirmLeaveChat,
   toggleConfirmLeaveChat,
   handleLeaveChat,
-  chatroomId,
-}: // session,
-// userId,
-{
+  chatroom,
+}: {
   showConfirmLeaveChat: boolean;
   toggleConfirmLeaveChat: () => void;
   handleLeaveChat: (chatroomId: number) => void;
-  chatroomId: number;
-  // session: Session | null
-  // userId: string
+  chatroom: ChatroomResult;
 }) {
   const [isDisabled, setDisabled] = useState(false);
   const [primaryLoading, setPrimaryLoading] = useState(false);
+  const modalRef = useRef(null);
 
-  const router = useRouter();
+  useEffect(() => {
+    const handleKeyDown = (e: any) => {
+      if (e.key === "Enter" && !isDisabled && showConfirmLeaveChat) {
+        handleConfirmLeaveChat();
+      }
+    };
+
+    if (showConfirmLeaveChat) {
+      document.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.removeEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showConfirmLeaveChat, isDisabled]);
 
   const handleConfirmLeaveChat = async () => {
     setPrimaryLoading((prev) => !prev);
     setDisabled(true);
-    handleLeaveChat(chatroomId);
+    await handleLeaveChat(chatroom.id);
     setPrimaryLoading((prev) => !prev);
     setDisabled(false);
     toggleConfirmLeaveChat();
@@ -39,6 +50,7 @@ export default function ConfirmLeaveChatModal({
   return (
     showConfirmLeaveChat && (
       <div
+        ref={modalRef}
         className="w-full h-full duration-300 overflow-x-hidden fixed inset-0 z-50 bg-[#262626] bg-opacity-[60%] px-[20px]"
         onClick={() => {
           toggleConfirmLeaveChat();
@@ -51,19 +63,13 @@ export default function ConfirmLeaveChatModal({
               e.stopPropagation();
             }}
           >
-            <p className="font-bold text-[24px] text-slate-600 mb-[15px]">
-              ออกจากกลุ่ม
+            <p className="font-bold text-[24px] text-slate-600 text-center pt-3">
+              ออกจากกลุ่ม {chatroom.name} ?
             </p>
-
-            <div className="flex gap-1 flex-grow mt-[30px] justify-center w-full ">
-              <p className="text-[16px] font-medium text-slate-900">
-                คุณแน่ใจที่จะออกจากกลุ่ม?
-              </p>
-            </div>
 
             <div className="mt-[20px] flex justify-between">
               <button
-                className="w-[47%] rounded-[6px] border border-[#E2E8F0] text-[#0F172A] py-[10px] hover:opacity-[80%] active:opacity-[60%] mt-[20px]"
+                className="w-[47%] rounded-[6px] border border-slate-300 text-[#0F172A] py-[10px] active:opacity-10 hover:opacity-60 mt-[20px]"
                 onClick={(e) => {
                   e.preventDefault();
                   toggleConfirmLeaveChat();
@@ -73,7 +79,9 @@ export default function ConfirmLeaveChatModal({
               </button>
               <button
                 type="button"
-                className={`px-[20px] py-[10px] rounded-[6px] text-sm font-medium text-slate-500 hover:bg-red-500 hover:text-white active:opacity-60 disabled:opacity-60 w-[47%] rounded-[6px] text-[#FFFFFF] bg-[#334155] py-[10px] mt-[20px]`}
+                className={`focus:bg-red-500 w-[47%] rounded-[6px] border border-slate-300 text-[#0F172A] py-[10px] hover:opacity-[80%] active:opacity-[60%] mt-[20px] hover:text-white hover:bg-red-500 ${
+                  primaryLoading && "bg-red-500 text-white"
+                }`}
                 disabled={isDisabled}
                 onClick={(e) => {
                   e.preventDefault();
@@ -91,7 +99,7 @@ export default function ConfirmLeaveChatModal({
                     กำลังดำเนินการ
                   </div>
                 ) : (
-                  <p className="text-white">ยืนยันการออกจากกลุ่ม</p>
+                  <p>ยืนยัน</p>
                 )}
               </button>
             </div>

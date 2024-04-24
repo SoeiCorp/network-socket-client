@@ -49,7 +49,7 @@ export default function ChatMessageListByDate({
 
   return (
     <div className="flex flex-col">
-      <div className="self-center text-slate-500 text-[12px] my-[14px] lg:text-[14px] lg:my-[16px] py-[2px] px-[8px] lg:px-[10px] rounded-xl bg-neutral-200">
+      <div className="self-center text-slate-500 text-[12px] my-[14px] lg:text-[14px] lg:my-[16px] py-[2px] px-[8px] lg:px-[10px] rounded-xl bg-slate-200">
         {formattedDate(Date)}
       </div>
       <div className="flex flex-col-reverse">
@@ -60,6 +60,7 @@ export default function ChatMessageListByDate({
               {message.userId !== senderId &&
               (index === array.length - 1 ||
                 message.userId !== array[index + 1].userId) ? (
+                // Chat group avatar
                 <div className="flex item gap-3 mt-3">
                   <Avatar
                     name={message.userName}
@@ -81,6 +82,7 @@ export default function ChatMessageListByDate({
                   </div>
                 </div>
               ) : message.userId !== senderId ? (
+                // Private chat avatar
                 <div className="flex item gap-3">
                   <Avatar
                     name={message.userName}
@@ -95,6 +97,7 @@ export default function ChatMessageListByDate({
                   />
                 </div>
               ) : (
+                // Our
                 <ChatMessage
                   key={index}
                   message={message}

@@ -31,11 +31,11 @@ export default function ChatInput({ chatroomId }: Props) {
         name="text"
         placeholder="ส่งข้อความ..."
         onChange={(e) => setMessage(e.target.value)}
-        className="h-[45px] w-full px-5 rounded-full bg-neutral-100 border border-neutral-300 placeholder:text-neutral-400 focus:outline-none lg:text-[18px]"
+        className="h-[45px] w-full px-5 rounded-full bg-slate-100 border border-slate-300 placeholder:text-slate-400 focus:outline-none lg:text-[18px]"
       />
       <button
         type="submit"
-        className="h-fit py-[2px] pl-[0px] pr-[4px] rounded-full hover:bg-neutral-200"
+        className="h-fit py-[2px] pl-[0px] pr-[4px] rounded-full active:bg-slate-300 hover:bg-slate-200"
       >
         <Image
           className={""}

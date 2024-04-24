@@ -14,22 +14,26 @@ import { socket } from "@/components/socket/client";
 interface Props {
   allUsers: UserResult[];
   onlineIds: String[];
+  onlineLoading: boolean;
 }
 
-export default function PrivateChatCardList({ allUsers, onlineIds }: Props) {
+export default function PrivateChatCardList({
+  allUsers,
+  onlineIds,
+  onlineLoading,
+}: Props) {
   const onlineUsers = allUsers.filter((user) =>
     onlineIds.includes(user.id.toString())
   );
   const offlineUsers = allUsers.filter(
     (user) => !onlineIds.includes(user.id.toString())
   );
-  const [loading, setLoading] = useState<boolean>(false);
   const { context, setTrigger } = useAppContext();
 
   return (
     <div className="flex flex-col gap-2">
       {/* TODO : UI to display onlineChatroom and offlineChatroom */}
-      {loading ? (
+      {onlineLoading ? (
         Array.from({ length: 12 }).map((_, index) => (
           <ChatCardLoading key={index} />
         ))
@@ -59,7 +63,11 @@ export default function PrivateChatCardList({ allUsers, onlineIds }: Props) {
           <div className="text-slate-500 mt-[25px] flex flex-col gap-2">
             <div className="ml-[8px]">ออฟไลน์ {`(${offlineUsers.length})`}</div>
             {offlineUsers.map((user, index) => (
-              <PrivateChatCard key={index + onlineUsers.length} user={user} />
+              <PrivateChatCard
+                key={index + onlineUsers.length}
+                user={user}
+                isOffLine={true}
+              />
             ))}
           </div>
         </div>

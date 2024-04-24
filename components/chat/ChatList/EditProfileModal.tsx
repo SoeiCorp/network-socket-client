@@ -1,9 +1,7 @@
-"use client";
-
 import PrimaryButton from "@/components/public/PrimaryButton";
 import toast from "react-hot-toast";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { updateUser } from "@/components/socket/client";
 import { useAppContext } from "@/context";
 
 export default function EditProfileModal({
@@ -18,7 +16,7 @@ export default function EditProfileModal({
   const [isDisabled, setDisabled] = useState(false);
   const [primaryLoading, setPrimaryLoading] = useState(false);
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
@@ -36,7 +34,7 @@ export default function EditProfileModal({
       if (response.ok) {
         console.log("Edit name successfully");
         toast.success("แก้ไขชื่อสำเร็จ");
-        setName("");
+        updateUser(context.userId, name);
         setTrigger((prev: boolean) => !prev);
       } else {
         console.error("Edit name failed");
@@ -46,11 +44,32 @@ export default function EditProfileModal({
       console.error("Error edit user:", error);
       toast.error("System error");
     } finally {
+      setName("");
       setPrimaryLoading(false);
       setDisabled(false);
       toggleEditProfile();
     }
   };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleEditProfile();
+    }
+  };
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        toggleEditProfile();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [toggleEditProfile]);
 
   return (
     showEditProfile && (
@@ -67,30 +86,26 @@ export default function EditProfileModal({
               e.stopPropagation();
             }}
           >
-            <p className="font-bold text-[24px] text-slate-600 mb-[7px]">
-              แก้ไขโปรไฟล์
+            <p className="font-bold text-[24px] text-slate-600 mb-[7px] text-center pt-2">
+              เปลี่ยนชื่อ
             </p>
 
             <div className="flex flex-col gap-1 flex-grow mt-[10px]">
-              <label
-                htmlFor="text-area"
-                className="text-[14px] font-medium text-slate-900"
-              >
-                ชื่อ
-              </label>
-              <textarea
+              <input
                 id="text-area"
                 name="name"
-                className="h-[100px] rounded-[6px] border border-[#CBD5E1] px-[10px] py-[5px] "
+                type="text"
+                className="py-[10px] rounded-[6px] border border-[#CBD5E1] px-[10px]"
                 onChange={handleChange}
                 value={name}
                 placeholder={context.name}
-              ></textarea>
+                onKeyDown={handleKeyPress} // Handle Enter key press
+              ></input>
             </div>
 
             <div className="mt-[20px] flex justify-between">
               <button
-                className="w-[47%] rounded-[6px] border border-[#E2E8F0] text-[#0F172A] py-[10px] hover:opacity-[80%] active:opacity-[60%]"
+                className="w-[47%] rounded-[6px] border border-slate-300 text-[#0F172A] py-[10px] hover:opacity-[60%] active:opacity-[10%]"
                 onClick={() => {
                   toggleEditProfile();
                 }}
@@ -105,7 +120,7 @@ export default function EditProfileModal({
                 onClick={handleEditProfile}
                 loadingMessage="กำลังดำเนินการ"
               >
-                ยืนยันการแก้ไข
+                บันทึก
               </PrimaryButton>
             </div>
           </div>

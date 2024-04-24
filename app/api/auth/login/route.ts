@@ -4,15 +4,20 @@ import { users } from "@/drizzle/schemas/users";
 import { eq } from "drizzle-orm";
 import { createToken } from "@/lib/auth";
 import { reqBody } from "./reqBody";
+import { pg } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const bcrypt = require("bcrypt");
   try {
     const reqBody: reqBody = await req.json();
-    const user = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, reqBody.email));
+    // const user = await db
+    //   .select()
+    //   .from(users)
+    //   .where(eq(users.email, reqBody.email));
+    console.log(reqBody.email)
+    const result = await pg.query(`SELECT * FROM users WHERE users.email='${reqBody.email}'`)
+    console.log(result)
+    const user = result.rows
     if (!user.length) {
       return NextResponse.json(
         {

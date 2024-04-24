@@ -3,6 +3,7 @@ import { db } from '@/drizzle/db';
 import { chatrooms } from '@/drizzle/schemas/chatrooms';
 import { chatroomUsers } from '@/drizzle/schemas/chatroomUsers';
 import { eq } from 'drizzle-orm';
+import { pg } from '@/lib/db';
 
 type ChatroomResult = {
     id: number;
@@ -14,30 +15,55 @@ type ChatroomResult = {
 
 export async function GET(req: NextRequest) {
     try {
-        const rows = await db.select({
-            chatroom: chatrooms,
-            chatroomUser: chatroomUsers
-        }).from(chatrooms).leftJoin(chatroomUsers, eq(chatrooms.id, chatroomUsers.chatroomId))
-        const result: ChatroomResult = rows.reduce((accum: ChatroomResult, { chatroom, chatroomUser }) => {
-            const chatroomId = chatroom.id;
-            const existingChatroom = accum.find(room => room.id === chatroomId);
-            if (existingChatroom) {
-                existingChatroom.numUsers++;
-            } else {
-                accum.push({
-                    id: chatroomId,
-                    name: chatroom.name,
-                    type: chatroom.type,
-                    createdAt: chatroom.createdAt,
-                    numUsers: 1,
-                });
+        let result;
+        // const rows = await db.select({
+        //     chatroom: chatrooms,
+        //     chatroomUser: chatroomUsers
+        // }).from(chatrooms).leftJoin(chatroomUsers, eq(chatrooms.id, chatroomUsers.chatroomId))
+        // const result: ChatroomResult = rows.reduce((accum: ChatroomResult, { chatroom, chatroomUser }) => {
+        //     const chatroomId = chatroom.id;
+        //     const existingChatroom = accum.find(room => room.id === chatroomId);
+        //     if (existingChatroom) {
+        //         existingChatroom.numUsers++;
+        //     } else {
+        //         accum.push({
+        //             id: chatroomId,
+        //             name: chatroom.name,
+        //             type: chatroom.type,
+        //             createdAt: chatroom.createdAt,
+        //             numUsers: 1,
+        //         });
+        //     }
+        //     return accum;
+        // }, []);
+        result = await pg.query(`
+            SELECT 
+	            chatrooms.id,
+	            chatrooms.name,
+	            chatrooms.chatroom_type,
+	            chatrooms.created_at,
+	            COUNT(*) 
+            FROM chatroom_users
+            LEFT JOIN chatrooms
+            ON chatrooms.id = chatroom_users.chatroom_id
+            GROUP BY 
+	            chatrooms.id, 
+	            chatrooms.name,
+	            chatrooms.chatroom_type,
+	            chatrooms.created_at`)
+        const modifiedResult = result.rows.map((item: any) => {
+            return {
+                id: item.id,
+                name: item.name,
+                type: item.chatroom_type,
+                createdAt: item.created_at,
+                numUsers: parseInt(item.count)
             }
-            return accum;
-        }, []);
+        })
         return NextResponse.json({
             success: true,
             message: 'Successfully get all chatrooms',
-            data: result
+            data: modifiedResult
         }, { status: 200 })
     } catch (err) {
         console.log(err)
