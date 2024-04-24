@@ -23,7 +23,8 @@ export let socket: Socket = io(socketServerURL, {
 export async function connect(
   setRevalidateUsers: React.Dispatch<React.SetStateAction<boolean>>,
   setOnlineIds: React.Dispatch<React.SetStateAction<string[]>>,
-  setAllUsers: React.Dispatch<React.SetStateAction<UserResult[]>>
+  setAllUsers: React.Dispatch<React.SetStateAction<UserResult[]>>,
+  setOnlineLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   const res = await fetch("/api/auth/me");
   const response = await res.json();
@@ -57,6 +58,7 @@ export async function connect(
   socket.on("users online", (data: string[]) => {
     setRevalidateUsers((prev) => !prev);
     setOnlineIds(data);
+    setOnlineLoading(false);
   });
   socket.on("update user", (userId: Number, name: String) => {
     console.log("Socket update user");

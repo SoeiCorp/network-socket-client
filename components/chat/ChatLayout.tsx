@@ -29,11 +29,12 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
   }>({ joinedGroup: [], notJoinedGroup: [] });
   const [revalidateUsers, setRevalidateUsers] = useState(false);
   const [revalidateChatrooms, setRevalidateChatrooms] = useState(false);
+  const [onlineLoading, setOnlineLoading] = useState(true);
 
   // Connect to WS
   useEffect(() => {
     function connectToSocket() {
-      connect(setRevalidateUsers, setOnlineIds, setAllUsers);
+      connect(setRevalidateUsers, setOnlineIds, setAllUsers, setOnlineLoading);
     }
     connectToSocket();
   }, []);
@@ -168,7 +169,11 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
         {/* ChatCardList base on isGroupChat */}
         {isPrivateChat ? (
           <div className="overflow-y-auto mt-[10px] h-[75%]">
-            <PrivateChatCardList allUsers={allUsers} onlineIds={onlineIds} />
+            <PrivateChatCardList
+              allUsers={allUsers}
+              onlineIds={onlineIds}
+              onlineLoading={onlineLoading}
+            />
           </div>
         ) : (
           <div className="overflow-y-auto mt-[10px] h-[70%]">
