@@ -59,7 +59,7 @@ export default function PrivateChatCardList({ allUsers, onlineIds }: Props) {
           <div className="text-slate-500 mt-[25px] flex flex-col gap-2">
             <div className="ml-[8px]">ออฟไลน์ {`(${offlineUsers.length})`}</div>
             {offlineUsers.map((user, index) => (
-              <PrivateChatCard key={index + onlineUsers.length} user={user} />
+              <PrivateChatCard key={index + onlineUsers.length} user={user} isOffLine={true} />
             ))}
           </div>
         </div>

@@ -33,7 +33,6 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
   // Connect to WS
   useEffect(() => {
     function connectToSocket() {
-      console.log("Connect to socket");
       connect(setRevalidateUsers, setOnlineIds, setAllUsers);
     }
     connectToSocket();

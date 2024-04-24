@@ -39,8 +39,8 @@ export async function connect(
     withCredentials: true,
     transports: ["websocket"],
   });
-
   console.log("Connect to socket");
+
   socket.on("connect_error", (err) => {
     // the reason of the error, for example "xhr poll error"
     console.log(err.message);

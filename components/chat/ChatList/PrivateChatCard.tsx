@@ -10,9 +10,10 @@ import { useAppContext } from "@/context";
 
 type Props = {
   user: UserResult;
+  isOffLine?: boolean;
 };
 
-export default function PrivateChatCard({ user }: Props) {
+export default function PrivateChatCard({ user, isOffLine }: Props) {
   const [chatroomId, setChatroomId] = useState(null);
   const [loading, setLoading] = useState(false);
   const pathName = usePathname();
@@ -70,7 +71,9 @@ export default function PrivateChatCard({ user }: Props) {
             isChatRoom
               ? "bg-slate-200"
               : "active:bg-slate-200 hover:bg-slate-100"
-          } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3`}
+          } flex items-center gap-2 px-[16px] py-3 rounded-[16px] hover:cursor-pointer mr-3 ${
+            isOffLine && "opacity-50"
+          }`}
           onClick={handleCreateChatroom}
         >
           <Avatar name={user.name} userId={user.id} />
